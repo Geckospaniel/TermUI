@@ -1,0 +1,6 @@
+#	Initially the repo isn't treated as a library
+obj/
+x
+
+#	Vim swap files
+.*.swp
