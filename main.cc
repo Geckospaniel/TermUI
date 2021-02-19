@@ -1,18 +1,16 @@
 #include "Container.hh"
 
-class Canvas : public Window
-{
-public:
-	Canvas() : Window(NULL)
-	{
-	}
-};
-
 int main()
 {
 	auto root = Window::create <Container> ();
-	auto canvas = root->create <Canvas> ();
+	auto canvas = root->create <Container> (Vector2(25, 25), Vector2(75, 75));
+	auto abc = canvas.create <Container> (Vector2(25, 25), Vector2(75, 75));
 
+	root->draw();
+	canvas.draw();
+	abc.draw();
+
+	while(true)
 	{
 	}
 
