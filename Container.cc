@@ -45,12 +45,11 @@ void Container::draw()
 		return;
 
 	drawBorders("");
+	mvwprintw(window, 1, 1, "%lu", children.size());
 	wrefresh(window);
 
 	for(auto& child : children)
-	{
-		//child->draw();
-	}
+		child->draw();
 
 	needsRedraw = false;
 }

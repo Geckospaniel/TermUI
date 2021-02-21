@@ -9,25 +9,27 @@ class Container : public Window
 {
 public:
 	template <typename T, typename... Args>
-	T& create(Args&& ...args)
+	T* create(Args&& ...args)
 	{
-		//	Create the actual pointer and get a reference to it
 		children.push_back(Window::create <T> (std::forward <Args> (args)...));
-		T& child = *(static_cast <T*> (children.back()));
+		Window* child = children.back();
 
-		Vector2 tStart = translatePosition(child.start);
-		Vector2 tEnd = translatePosition(child.end);
+		Vector2 tStart = translatePosition(child->start);
+		Vector2 tEnd = translatePosition(child->end);
 
 		//	TODO check somewhere if end is less than start
 		unsigned columns = tEnd.x - tStart.x;
 		unsigned rows = tEnd.y - tStart.y;
 
-		child.window = derwin(window, rows, columns, tStart.y, tStart.x);
-		return child;
+		child->window = derwin(window, rows, columns, tStart.y, tStart.x);
+
+		//	TODO find out a way to return a reference instead of a pointer
+		return static_cast <T*> (child);
 	}
 
 	//	Initializes ncurses
 	Container();
+	Container(const Container&) = delete;
 
 	//	Creates a child container
 	Container(const Vector2& start, const Vector2& end);
@@ -39,6 +41,7 @@ public:
 	void draw() override;
 
 private:
+	//	TODO use unique pointers instead?
 	std::vector <Window*> children;
 };
 
