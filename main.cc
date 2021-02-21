@@ -2,16 +2,12 @@
 
 int main()
 {
-	auto root = Window::create <Container> ();
-	auto canvas = root->create <Container> (Vector2(25, 25), Vector2(75, 75));
-	auto abc = canvas->create <Container> (Vector2(25, 25), Vector2(75, 75));
-
-	//root->draw();
-	//canvas.draw();
-	//abc.draw();
+	Container root;
+	Container& canvas = root.create <Container> (Vector2(25, 25), Vector2(75, 75));
+	Container& abc = canvas.create <Container> (Vector2(25, 25), Vector2(75, 75));
 
 	{
-		root->draw();
+		root.draw();
 		getch();
 	}
 

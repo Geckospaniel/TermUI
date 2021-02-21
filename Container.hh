@@ -3,15 +3,16 @@
 
 #include "Window.hh"
 
+#include <memory>
 #include <vector>
 
 class Container : public Window
 {
 public:
 	template <typename T, typename... Args>
-	T* create(Args&& ...args)
+	T& create(Args&& ...args)
 	{
-		children.push_back(Window::create <T> (std::forward <Args> (args)...));
+		children.push_back(new T(std::forward <Args> (args)...));
 		Window* child = children.back();
 
 		Vector2 tStart = translatePosition(child->start);
@@ -24,7 +25,7 @@ public:
 		child->window = derwin(window, rows, columns, tStart.y, tStart.x);
 
 		//	TODO find out a way to return a reference instead of a pointer
-		return static_cast <T*> (child);
+		return *(static_cast <T*> (child));
 	}
 
 	//	Initializes ncurses

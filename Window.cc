@@ -1,5 +1,11 @@
 #include "Window.hh"
 
+Window::~Window()
+{
+	bool isRoot;
+	delwin(window);
+}
+
 void Window::draw()
 {
 }
@@ -23,4 +29,8 @@ Vector2 Window::translatePosition(const Vector2& position)
 		(static_cast <float> (position.x) / 100) * getmaxx(window),
 		(static_cast <float> (position.y) / 100) * getmaxy(window)
 	);
+}
+
+void Window::onUpdate()
+{
 }

@@ -7,26 +7,13 @@
 
 #include <functional>
 #include <utility>
+#include <memory>
 #include <string>
 
 class Window
 {
 public:
-	template <typename T, typename ...Args>
-	static inline T* create(Args&& ...args)
-	{
-		return new T(std::forward <Args> (args)...);
-	}
-
-	void update(int y)
-	{
-		mvprintw(y, 10, "MOI");
-	}
-
-	//Window(const Window& rhs) = delete;
-	virtual ~Window()
-	{
-	}
+	virtual ~Window();
 
 protected:
 	Window(const Vector2& start, const Vector2& end)
@@ -36,6 +23,7 @@ protected:
 	virtual void draw();
 	virtual void onSetActive();
 	virtual void onKeyPress(char key);
+	virtual void onUpdate();
 
 	void drawBorders(const std::string& title);
 	Vector2 translatePosition(const Vector2& position);
@@ -46,8 +34,10 @@ protected:
 	bool needsRedraw = true;
 
 private:
-	//	Container needs exclusive access to window
+	//	Container needs exclusive access to private members
 	friend class Container;
+
+	void update();
 	WINDOW* window;
 };
 
