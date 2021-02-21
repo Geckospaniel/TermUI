@@ -2,8 +2,12 @@
 
 Window::~Window()
 {
-	bool isRoot;
+	//	Deallocate the window
 	delwin(window);
+
+	//	If this has the root window, quit ncurses
+	if(window == stdscr)
+		endwin();
 }
 
 void Window::draw()

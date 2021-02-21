@@ -30,19 +30,14 @@ public:
 
 	//	Initializes ncurses
 	Container();
-	Container(const Container&) = delete;
+	~Container();
 
 	//	Creates a child container
 	Container(const Vector2& start, const Vector2& end);
 
-	~Container() override
-	{
-	}
-
 	void draw() override;
 
 private:
-	//	TODO use unique pointers instead?
 	std::vector <Window*> children;
 };
 

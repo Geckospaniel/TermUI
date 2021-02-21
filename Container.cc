@@ -34,6 +34,13 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	isInitialized = true;
 }
 
+Container::~Container()
+{
+	//	Deallocate each child
+	for(auto& child : children)
+		delete child;
+}
+
 Container::Container(const Vector2& start, const Vector2& end) :
 	Window(start, end)
 {
