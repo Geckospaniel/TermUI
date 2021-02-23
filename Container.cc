@@ -28,6 +28,9 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	//	Support arrow keys
 	keypad(window, true);
 
+	//	Support mouse input
+	mousemask(ALL_MOUSE_EVENTS, NULL);
+
 	//	Hide the cursor
 	curs_set(0);
 
@@ -59,4 +62,27 @@ void Container::draw()
 		child->draw();
 
 	needsRedraw = false;
+}
+
+void Container::handleEvent(Event event)
+{
+	if(event.type == Event::Type::None)
+	{
+		int c = wgetch(window);
+	}
+
+	if(activeChild != nullptr)
+		activeChild->handleEvent(event);
+}
+
+void Container::update()
+{
+	draw();
+
+	//	Check user input by passing in an empty event
+	handleEvent({});
+
+	//	Update each child
+	for(auto& child : children)
+		child->onUpdate();
 }

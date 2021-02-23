@@ -3,7 +3,6 @@
 
 #include "Window.hh"
 
-#include <memory>
 #include <vector>
 
 class Container : public Window
@@ -24,7 +23,6 @@ public:
 
 		child->window = derwin(window, rows, columns, tStart.y, tStart.x);
 
-		//	TODO find out a way to return a reference instead of a pointer
 		return *(static_cast <T*> (child));
 	}
 
@@ -36,8 +34,12 @@ public:
 	Container(const Vector2& start, const Vector2& end);
 
 	void draw() override;
+	void handleEvent(Event event) override;
+
+	void update();
 
 private:
+	Window* activeChild = nullptr;
 	std::vector <Window*> children;
 };
 

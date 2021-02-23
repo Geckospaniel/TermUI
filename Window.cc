@@ -2,11 +2,13 @@
 
 Window::~Window()
 {
+	bool isRoot = window == stdscr;
+
 	//	Deallocate the window
 	delwin(window);
 
 	//	If this has the root window, quit ncurses
-	if(window == stdscr)
+	if(isRoot)
 		endwin();
 }
 
@@ -36,5 +38,9 @@ Vector2 Window::translatePosition(const Vector2& position)
 }
 
 void Window::onUpdate()
+{
+}
+
+void Window::handleEvent(Event event)
 {
 }

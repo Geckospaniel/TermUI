@@ -7,8 +7,7 @@ int main()
 	Container& abc = canvas.create <Container> (Vector2(25, 25), Vector2(75, 75));
 
 	{
-		root.draw();
-		getch();
+		root.update();
 	}
 
 	return 0;

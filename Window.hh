@@ -2,6 +2,7 @@
 #define WINDOW_HEADER
 
 #include "Vector2.hh"
+#include "Event.hh"
 
 #include <ncurses.h>
 
@@ -37,7 +38,7 @@ private:
 	//	Container needs exclusive access to private members
 	friend class Container;
 
-	void update();
+	virtual void handleEvent(Event event);
 	WINDOW* window;
 };
 
