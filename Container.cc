@@ -7,7 +7,7 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 
 	if(isInitialized)
 	{
-		Color::useColor(Color::White, Color::Red);
+		setColor(Color::White, Color::Red);
 		printw("ERROR: Root container has already been made\n");
 		getch();
 		endwin();
@@ -34,6 +34,7 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	//	Hide the cursor
 	curs_set(0);
 
+	isFocused = true;
 	isInitialized = true;
 }
 
@@ -52,7 +53,7 @@ Container::Container(const Vector2& start, const Vector2& end) :
 void Container::draw()
 {
 	if(!needsRedraw)
-		return;
+		;//return;
 
 	drawBorders("");
 	mvwprintw(window, 1, 1, "%lu", children.size());
@@ -71,8 +72,29 @@ void Container::handleEvent(Event event)
 		int c = wgetch(window);
 	}
 
+	//	Send events to the active windoe
 	if(activeChild != nullptr)
 		activeChild->handleEvent(event);
+}
+
+void Container::setActiveChild()
+{
+	for(auto& child : children)
+	{
+		if(child->wantsFocus)
+		{
+			//	If a window wants the focus, set it as active
+			activeChild = child;
+			activeChild->isFocused = true;
+			activeChild->wantsFocus = false;
+		}
+
+		else
+		{
+			//	Unfocus any windows that don't want it
+			child->isFocused = false;
+		}
+	}
 }
 
 void Container::update()

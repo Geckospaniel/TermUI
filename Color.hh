@@ -31,13 +31,13 @@ public:
 		return true;
 	}
 
-	static void useColor(Name fg, Name bg)
+	static void set(Name fg, Name bg, WINDOW* win)
 	{
 		/*	Since the colors are initialized in a 2 dimensional
 		 *	for loop, we can treat fg and bg as x and y
 		 *	and calculate the correct index	*/
 		unsigned index = size * fg + bg + 1;
-		attron(COLOR_PAIR(index));
+		wattron(win, COLOR_PAIR(index));
 	}
 
 private:

@@ -15,13 +15,17 @@ public:
 		Window* child = children.back();
 
 		Vector2 tStart = translatePosition(child->start);
-		Vector2 tEnd = translatePosition(child->end);
+		Vector2 tSize = translatePosition(child->end - child->start);
 
 		//	TODO check somewhere if end is less than start
-		unsigned columns = tEnd.x - tStart.x;
-		unsigned rows = tEnd.y - tStart.y;
+		unsigned columns = tSize.x;
+		unsigned rows = tSize.y;
 
 		child->window = derwin(window, rows, columns, tStart.y, tStart.x);
+		child->parent = this;
+
+		//	Always focus on the latest window
+		child->stealFocus();
 
 		return *(static_cast <T*> (child));
 	}
@@ -39,6 +43,8 @@ public:
 	void update();
 
 private:
+	void setActiveChild() override;
+
 	Window* activeChild = nullptr;
 	std::vector <Window*> children;
 };

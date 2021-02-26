@@ -1,4 +1,7 @@
 #include "Window.hh"
+#include "Color.hh"
+
+#include <cmath>
 
 Window::~Window()
 {
@@ -26,6 +29,10 @@ void Window::onKeyPress(char key)
 
 void Window::drawBorders(const std::string& title)
 {
+	//	Color the border depending on whether the window is active
+	Color::Name fg = isFocused ? Color::Green : Color::White;
+	setColor(fg, Color::Black);
+
 	box(window, 0, 0);
 }
 
@@ -43,4 +50,16 @@ void Window::onUpdate()
 
 void Window::handleEvent(Event event)
 {
+}
+
+void Window::stealFocus()
+{
+	//	Climb all the way to root and request focus
+	if(parent != nullptr)
+	{
+		wantsFocus = true;
+		parent->stealFocus();
+	}
+
+	setActiveChild();
 }
