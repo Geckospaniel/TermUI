@@ -53,10 +53,10 @@ Container::Container(const Vector2& start, const Vector2& end) :
 void Container::draw()
 {
 	if(!needsRedraw)
-		;//return;
+		return;
 
 	drawBorders("");
-	mvwprintw(window, 1, 1, "%lu", children.size());
+	mvwprintw(window, 1, 1, "%lu %s", children.size(), a.c_str());
 	wrefresh(window);
 
 	for(auto& child : children)
@@ -70,11 +70,18 @@ void Container::handleEvent(Event event)
 	if(event.type == Event::Type::None)
 	{
 		int c = wgetch(window);
+		event.type = Event::Type::KeyPress;
+		event.value.key = c;
 	}
+
+	needsRedraw = true;
+	a += event.value.key;
 
 	//	Send events to the active windoe
 	if(activeChild != nullptr)
+	{
 		activeChild->handleEvent(event);
+	}
 }
 
 void Container::setActiveChild()
@@ -106,5 +113,8 @@ void Container::update()
 
 	//	Update each child
 	for(auto& child : children)
-		child->onUpdate();
+	{
+		if(child->onUpdate)
+			child->onUpdate();
+	}
 }

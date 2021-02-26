@@ -40,13 +40,15 @@ public:
 	void draw() override;
 	void handleEvent(Event event) override;
 
-	void update();
+	void update() override;
 
 private:
 	void setActiveChild() override;
 
 	Window* activeChild = nullptr;
 	std::vector <Window*> children;
+
+	std::string a;
 };
 
 #endif

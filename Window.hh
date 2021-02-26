@@ -18,15 +18,16 @@ public:
 
 	void stealFocus();
 
+	std::function <bool()> onUpdate;
+	std::function <void()> onFocus;
+
 protected:
 	Window(const Vector2& start, const Vector2& end)
 		: start(start), end(end)
 	{}
 
-	virtual void draw();
-	virtual void onSetActive();
-	virtual void onKeyPress(char key);
-	virtual void onUpdate();
+	virtual void draw() {}
+	virtual void update() {}
 
 	void drawBorders(const std::string& title);
 	Vector2 translatePosition(const Vector2& position);

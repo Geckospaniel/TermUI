@@ -13,8 +13,6 @@ int main()
 	Container& s2p1 = side2.create <Container> (Vector2(5, 5), Vector2(95, 50));
 	Container& s2p2 = side2.create <Container> (Vector2(5, 50), Vector2(95, 95));
 
-	s1p1.stealFocus();
-
 	while(true)
 	{
 		root.update();

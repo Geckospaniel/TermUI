@@ -15,18 +15,6 @@ Window::~Window()
 		endwin();
 }
 
-void Window::draw()
-{
-}
-
-void Window::onSetActive()
-{
-}
-
-void Window::onKeyPress(char key)
-{
-}
-
 void Window::drawBorders(const std::string& title)
 {
 	//	Color the border depending on whether the window is active
@@ -42,10 +30,6 @@ Vector2 Window::translatePosition(const Vector2& position)
 		(static_cast <float> (position.x) / 100) * getmaxx(window),
 		(static_cast <float> (position.y) / 100) * getmaxy(window)
 	);
-}
-
-void Window::onUpdate()
-{
 }
 
 void Window::handleEvent(Event event)
