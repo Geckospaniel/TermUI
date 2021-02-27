@@ -1,4 +1,5 @@
 #include "Container.hh"
+#include "List.hh"
 
 int main()
 {
@@ -10,11 +11,10 @@ int main()
 	Container& s1p1 = side1.create <Container> (Vector2(5, 5), Vector2(95, 50));
 	Container& s1p2 = side1.create <Container> (Vector2(5, 50), Vector2(95, 95));
 
-	Container& s2p1 = side2.create <Container> (Vector2(5, 5), Vector2(95, 50));
+	List& s2p1 = side2.create <List> (Vector2(5, 5), Vector2(95, 50));
 	Container& s2p2 = side2.create <Container> (Vector2(5, 50), Vector2(95, 95));
 
-	side1.setTitle("moi");
-	s1p2.setTitle("JAMAMMAMAMAMAMAMMAMaedasjkldjalskdjalskdjalskdjlkasdjklasdjlhskjdlfhkjjjxxxxxx");
+	s2p1.stealFocus();
 
 	while(true)
 	{
