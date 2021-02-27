@@ -7,7 +7,7 @@ struct Event
 {
 	union ValueType
 	{
-		char key;
+		int key;
 
 		struct
 		{
