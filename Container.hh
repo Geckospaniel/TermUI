@@ -37,13 +37,12 @@ public:
 	//	Creates a child container
 	Container(const Vector2& start, const Vector2& end);
 
-	void draw() override;
-	void handleEvent(Event event) override;
-
 	void update() override;
 
 private:
+	void handleEvent(Event event) override;
 	void setActiveChild() override;
+	void draw() override;
 
 	Window* activeChild = nullptr;
 	std::vector <Window*> children;

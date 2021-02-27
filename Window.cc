@@ -49,7 +49,10 @@ void Window::handleEvent(Event event)
 {
 	switch(event.type)
 	{
-		case Event::Type::KeyPress: break;
+		case Event::Type::KeyPress:
+			if(onKeyPress) onKeyPress(event.value.key);
+		break;
+
 		case Event::Type::MouseClick: break;
 		case Event::Type::None: break;
 	}

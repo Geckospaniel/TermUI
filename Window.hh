@@ -19,8 +19,8 @@ public:
 	void stealFocus();
 	void setTitle(const std::string& str);
 
-	std::function <bool()> onUpdate;
 	std::function <void()> onFocus;
+	std::function <void(char)> onKeyPress;
 
 protected:
 	Window(const Vector2& start, const Vector2& end)

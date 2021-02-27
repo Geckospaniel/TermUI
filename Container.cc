@@ -52,21 +52,22 @@ Container::Container(const Vector2& start, const Vector2& end) :
 
 void Container::draw()
 {
-	if(!needsRedraw)
-		return;
+	if(needsRedraw)
+	{
+		drawBorders();
+		mvwprintw(window, 1, 1, "%lu %s", children.size(), a.c_str());
+		wrefresh(window);
 
-	drawBorders();
-	mvwprintw(window, 1, 1, "%lu %s", children.size(), a.c_str());
-	wrefresh(window);
+		needsRedraw = false;
+	}
 
 	for(auto& child : children)
 		child->draw();
-
-	needsRedraw = false;
 }
 
 void Container::handleEvent(Event event)
 {
+	//	If the event is empty, check user input
 	if(event.type == Event::Type::None)
 	{
 		int c = wgetch(window);
@@ -102,13 +103,11 @@ void Container::update()
 {
 	draw();
 
-	//	Check user input by passing in an empty event
-	handleEvent({});
+	//	If this container is the root, check user input
+	if(parent == nullptr)
+		handleEvent({});
 
 	//	Update each child
 	for(auto& child : children)
-	{
-		if(child->onUpdate)
-			child->onUpdate();
-	}
+		child->update();
 }
