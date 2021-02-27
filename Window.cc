@@ -40,9 +40,25 @@ void Window::drawBorders()
 	needsRedraw = false;
 }
 
-void Window::drawTextLine(const std::string& str, int x, int y)
+void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
 {
-	mvwprintw(window, y, x, "%s", str.c_str());
+	std::string leftPadding;
+	std::string rightPadding;
+
+	if(fillLine)
+	{
+		//	Initialize a padding that fills the line on both sides
+		leftPadding = std::string(x, ' ');
+		rightPadding = std::string(getmaxx(window) - x - str.length() - 2, ' ');
+
+		x = 0;
+	}
+
+	/*	Increment x and y so that 0 0 is the origin instead of 1 1 and
+	 *	print the string with padding if there's any */
+	mvwprintw(window, ++y, ++x, "%s%s%s", leftPadding.c_str(),
+										  str.c_str(),
+										  rightPadding.c_str());
 }
 
 Vector2 Window::translatePosition(const Vector2& position)

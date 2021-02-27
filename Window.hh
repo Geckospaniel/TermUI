@@ -28,9 +28,9 @@ protected:
 
 	virtual void draw() {}
 	virtual void update() {}
-	virtual void onKeyPress(char) {}
+	virtual void onKeyPress(int) {}
 
-	void drawTextLine(const std::string& str, int x, int y);
+	void drawTextLine(const std::string& str, int x, int y, bool fillLine);
 	void drawBorders();
 
 	Vector2 translatePosition(const Vector2& position);
