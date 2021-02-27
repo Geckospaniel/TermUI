@@ -75,6 +75,7 @@ void Container::handleEvent(Event event)
 	{
 		int c = wgetch(window);
 		event.type = Event::Type::KeyPress;
+		event.value.key = c;
 	}
 
 	//	Send events to the active window
