@@ -15,13 +15,26 @@ Window::~Window()
 		endwin();
 }
 
-void Window::drawBorders(const std::string& title)
+void Window::drawBorders()
 {
 	//	Color the border depending on whether the window is active
 	Color::Name fg = isFocused ? Color::Green : Color::White;
 	setColor(fg, Color::Black);
 
 	box(window, 0, 0);
+
+	std::string windowTitle = title;
+
+	//	If the title is too long, cut the overflow and signal the user that it doesn't fit
+	if(title.length() > static_cast <size_t> (getmaxx(window)))
+	{
+		windowTitle.erase(windowTitle.begin() + getmaxx(window) - 5, windowTitle.end());
+		windowTitle += std::string("...");
+	}
+
+	//	Print the title in the top middle of the box
+	unsigned titleX = getmaxx(window) / 2 - windowTitle.length() / 2;
+	mvwprintw(window, 0, titleX, "%s", windowTitle.c_str());
 }
 
 Vector2 Window::translatePosition(const Vector2& position)
@@ -34,6 +47,12 @@ Vector2 Window::translatePosition(const Vector2& position)
 
 void Window::handleEvent(Event event)
 {
+	switch(event.type)
+	{
+		case Event::Type::KeyPress: break;
+		case Event::Type::MouseClick: break;
+		case Event::Type::None: break;
+	}
 }
 
 void Window::stealFocus()
@@ -46,4 +65,10 @@ void Window::stealFocus()
 	}
 
 	setActiveChild();
+}
+
+void Window::setTitle(const std::string& str)
+{
+	title = str;
+	needsRedraw = true;
 }

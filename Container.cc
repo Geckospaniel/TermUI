@@ -55,7 +55,7 @@ void Container::draw()
 	if(!needsRedraw)
 		return;
 
-	drawBorders("");
+	drawBorders();
 	mvwprintw(window, 1, 1, "%lu %s", children.size(), a.c_str());
 	wrefresh(window);
 
@@ -71,17 +71,11 @@ void Container::handleEvent(Event event)
 	{
 		int c = wgetch(window);
 		event.type = Event::Type::KeyPress;
-		event.value.key = c;
 	}
 
-	needsRedraw = true;
-	a += event.value.key;
-
-	//	Send events to the active windoe
+	//	Send events to the active window
 	if(activeChild != nullptr)
-	{
 		activeChild->handleEvent(event);
-	}
 }
 
 void Container::setActiveChild()

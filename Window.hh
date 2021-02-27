@@ -17,6 +17,7 @@ public:
 	virtual ~Window();
 
 	void stealFocus();
+	void setTitle(const std::string& str);
 
 	std::function <bool()> onUpdate;
 	std::function <void()> onFocus;
@@ -29,7 +30,7 @@ protected:
 	virtual void draw() {}
 	virtual void update() {}
 
-	void drawBorders(const std::string& title);
+	void drawBorders();
 	Vector2 translatePosition(const Vector2& position);
 
 	inline void setColor(Color::Name fg, Color::Name bg)
@@ -37,10 +38,8 @@ protected:
 		Color::set(fg, bg, window);
 	}
 
-	Vector2 start;
-	Vector2 end;
-
 	bool needsRedraw = true;
+	std::string title;
 
 private:
 	//	Container needs exclusive access to private members
@@ -52,6 +51,9 @@ private:
 
 	bool wantsFocus = false;
 	bool isFocused = false;
+
+	Vector2 start;
+	Vector2 end;
 
 	Window* parent = nullptr;
 	WINDOW* window;
