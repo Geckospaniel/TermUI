@@ -35,6 +35,14 @@ void Window::drawBorders()
 	//	Print the title in the top middle of the box
 	unsigned titleX = getmaxx(window) / 2 - windowTitle.length() / 2;
 	mvwprintw(window, 0, titleX, "%s", windowTitle.c_str());
+
+	//	If borders are drawn, we can assume other stuff is drawn so reset needsRedraw
+	needsRedraw = false;
+}
+
+void Window::drawTextLine(const std::string& str, int x, int y)
+{
+	mvwprintw(window, y, x, "%s", str.c_str());
 }
 
 Vector2 Window::translatePosition(const Vector2& position)
@@ -50,7 +58,7 @@ void Window::handleEvent(Event event)
 	switch(event.type)
 	{
 		case Event::Type::KeyPress:
-			if(onKeyPress) onKeyPress(event.value.key);
+			onKeyPress(event.value.key);
 		break;
 
 		case Event::Type::MouseClick: break;

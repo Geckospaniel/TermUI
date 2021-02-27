@@ -20,7 +20,6 @@ public:
 	void setTitle(const std::string& str);
 
 	std::function <void()> onFocus;
-	std::function <void(char)> onKeyPress;
 
 protected:
 	Window(const Vector2& start, const Vector2& end)
@@ -29,8 +28,11 @@ protected:
 
 	virtual void draw() {}
 	virtual void update() {}
+	virtual void onKeyPress(char) {}
 
+	void drawTextLine(const std::string& str, int x, int y);
 	void drawBorders();
+
 	Vector2 translatePosition(const Vector2& position);
 
 	inline void setColor(Color::Name fg, Color::Name bg)
@@ -42,6 +44,8 @@ protected:
 	std::string title;
 
 private:
+	//	TODO maybe create a buffer used in drawing?
+
 	//	Container needs exclusive access to private members
 	friend class Container;
 
