@@ -46,8 +46,6 @@ private:
 
 	Window* activeChild = nullptr;
 	std::vector <Window*> children;
-
-	std::string a;
 };
 
 #endif

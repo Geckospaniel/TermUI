@@ -52,17 +52,20 @@ Container::Container(const Vector2& start, const Vector2& end) :
 
 void Container::draw()
 {
-	if(needsRedraw)
-	{
-		drawBorders();
-		mvwprintw(window, 1, 1, "%lu %s", children.size(), a.c_str());
-		wrefresh(window);
-
-		needsRedraw = false;
-	}
-
 	for(auto& child : children)
+	{
+		/*	TODO think of some clever way to eliminate the need
+		 *	to check needsRedraw in other window classes */
 		child->draw();
+
+		if(child->needsRedraw)
+		{
+			child->drawBorders();
+			wrefresh(child->window);
+
+			child->needsRedraw = false;
+		}
+	}
 }
 
 void Container::handleEvent(Event event)
@@ -89,6 +92,10 @@ void Container::setActiveChild()
 			activeChild = child;
 			activeChild->isFocused = true;
 			activeChild->wantsFocus = false;
+			
+			//	Call the window focus callback
+			if(activeChild->onFocus)
+				activeChild->onFocus();
 		}
 
 		else
@@ -101,11 +108,12 @@ void Container::setActiveChild()
 
 void Container::update()
 {
-	draw();
-
-	//	If this container is the root, check user input
+	//	If this container is the root, draw everything and check user input
 	if(parent == nullptr)
+	{
+		draw();
 		handleEvent({});
+	}
 
 	//	Update each child
 	for(auto& child : children)
