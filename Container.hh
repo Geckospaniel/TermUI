@@ -14,14 +14,15 @@ public:
 		children.push_back(new T(std::forward <Args> (args)...));
 		Window* child = children.back();
 
-		Vector2 tStart = translatePosition(child->start);
-		Vector2 tSize = translatePosition(child->end - child->start);
+		Vector2 pos = translatePosition(child->start);
+		child->size = translatePosition(child->end - child->start);
 
 		//	TODO check somewhere if end is less than start
-		unsigned columns = tSize.x;
-		unsigned rows = tSize.y;
+		unsigned columns = child->size.x;
+		unsigned rows = child->size.y;
 
-		child->window = derwin(window, rows, columns, tStart.y, tStart.x);
+		//	Create the window relative to parent window and save parent
+		child->window = derwin(window, rows, columns, pos.y, pos.x);
 		child->parent = this;
 
 		//	Always focus on the latest window

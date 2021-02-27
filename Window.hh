@@ -24,7 +24,8 @@ public:
 protected:
 	Window(const Vector2& start, const Vector2& end)
 		: start(start), end(end)
-	{}
+	{
+	}
 
 	virtual void draw() {}
 	virtual void update() {}
@@ -42,6 +43,7 @@ protected:
 
 	bool needsRedraw = true;
 	std::string title;
+	Vector2 size;
 
 private:
 	//	TODO maybe create a buffer used in drawing?
