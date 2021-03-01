@@ -9,6 +9,9 @@ struct Vector2
 	Vector2 operator+(const Vector2& rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
 	Vector2 operator-(const Vector2& rhs) const { return Vector2(x - rhs.x, y - rhs.y); }
 
+	void operator+=(const Vector2& rhs) { x += rhs.x; y += rhs.y; }
+	void operator-=(const Vector2& rhs) { x -= rhs.x; y -= rhs.y; }
+
 	int x;
 	int y;
 };
