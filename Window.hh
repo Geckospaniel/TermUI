@@ -41,6 +41,11 @@ protected:
 		Color::set(fg, bg, window);
 	}
 
+	inline void clear()
+	{
+		wclear(window);
+	}
+
 	bool needsRedraw = true;
 	std::string title;
 	Vector2 size;
