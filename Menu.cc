@@ -67,14 +67,22 @@ void Menu::onKeyPress(int key)
 		break;
 
 		case KEY_RIGHT: case KEY_ENTER:
-			//	Set the selected menu as active
-			menu->active = menu->entries[menu->selected].subMenu;
-			Window::clear();
+		{
+			MenuEntry* selectedMenu = menu->entries[menu->selected].subMenu;
 
 			//	Call the selection callback
-			if(menu->active->onSelect)
-				menu->active->onSelect();
-		break;
+			if(selectedMenu->onSelect)
+				selectedMenu->onSelect();
+
+			//	Only set the selected menu as active if it has something in it
+			if(!selectedMenu->entries.empty())
+			{
+				menu->active = selectedMenu;
+				Window::clear();
+			}
+
+			break;
+		}
 
 		case KEY_LEFT:
 			//	Don't go backwards past root
