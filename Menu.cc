@@ -69,7 +69,7 @@ void Menu::onKeyPress(int key)
 				menu->selected = 0;
 		break;
 
-		case KEY_RIGHT: case KEY_ENTER:
+		case KEY_RIGHT: case 10:
 		{
 			MenuEntry* selectedMenu = menu->entries[menu->selected].subMenu;
 
