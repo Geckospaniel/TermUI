@@ -10,6 +10,8 @@ class MenuEntry
 {
 public:
 	MenuEntry& add(const std::string& name);
+	void clear();
+
 	std::function <void()> onSelect;
 
 private:

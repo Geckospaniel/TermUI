@@ -9,6 +9,17 @@ MenuEntry& MenuEntry::add(const std::string& name)
 	return *next;
 }
 
+void MenuEntry::clear()
+{
+	//	Deallocate the the sub menus
+	for(auto& entry : entries)
+		delete entry.subMenu;
+
+	//	Remove all entries
+	entries.clear();
+	entries.shrink_to_fit();
+}
+
 MenuEntry* MenuEntry::findLastActive()
 {
 	//	If no menu is active, return this one
