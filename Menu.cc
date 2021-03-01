@@ -32,7 +32,10 @@ void Menu::draw()
 	{
 		MenuEntry* menu = root.findLastActive();
 
-		for(size_t i = 0; i < menu->entries.size(); i++)
+		size_t scrollAt = size.y;
+		size_t offset = menu->selected >= scrollAt ? menu->selected - scrollAt + 1 : 0;
+
+		for(size_t i = offset; i < menu->entries.size(); i++)
 		{
 			Color::Name fg = Color::White;
 			Color::Name bg = Color::Black;
@@ -45,7 +48,7 @@ void Menu::draw()
 			}
 
 			setColor(fg, bg);
-			drawTextLine(menu->entries[i].name, 0, i, true);
+			drawTextLine(menu->entries[i].name, 0, i - offset, true);
 		}
 	}
 }
