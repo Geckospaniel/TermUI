@@ -25,6 +25,9 @@ public:
 		child->window = derwin(window, rows, columns, pos.y, pos.x);
 		child->parent = this;
 
+		//	Ignore borders in the size
+		child->size -= Vector2(2, 2);
+
 		//	Always focus on the latest window
 		child->stealFocus();
 
