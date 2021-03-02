@@ -20,7 +20,7 @@ public:
 		//	FIXME check if tEnd is less than tStart
 		child->size = tEnd - tStart;
 
-		//	Create the window relative to parent window and save parent
+		//	Create a window relative to the parent window and save the parent
 		child->window = derwin(window, child->size.y, child->size.x, tStart.y, tStart.x);
 		child->parent = this;
 
