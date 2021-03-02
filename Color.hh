@@ -10,7 +10,11 @@ public:
 	{
 		Black, Red, Green,
 		Yellow, Blue, Magenta,
-		Cyan, White
+		Cyan, White,
+
+		Gray, LightRed, LightGreen,
+		LightYellow, LightBlue, LightMagenta,
+		LightCyan, LightWhite
 	};
 
 	static bool initialize()
@@ -41,7 +45,7 @@ public:
 	}
 
 private:
-	static constexpr unsigned size = 8;
+	static constexpr unsigned size = 16;
 };
 
 #endif
