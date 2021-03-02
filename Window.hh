@@ -48,6 +48,8 @@ protected:
 	}
 
 	bool needsRedraw = true;
+	bool isFocused = false;
+
 	std::string title;
 	Vector2 size;
 
@@ -62,7 +64,6 @@ private:
 	virtual void handleEvent(Event event);
 
 	bool wantsFocus = false;
-	bool isFocused = false;
 
 	Vector2 start;
 	Vector2 end;
