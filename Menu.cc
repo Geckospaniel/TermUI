@@ -37,14 +37,14 @@ void Menu::draw()
 
 		for(size_t i = offset; i < menu->entries.size(); i++)
 		{
-			Color::Name fg = Color::White;
+			Color::Name fg = isFocused ? Color::White : Color::Gray;
 			Color::Name bg = Color::Black;
 
 			//	Highlight if this is the active menu
 			if(i == menu->selected)
 			{
 				fg = Color::Black;
-				bg = Color::White;
+				bg = isFocused ? Color::White : Color::Gray;
 			}
 
 			setColor(fg, bg);

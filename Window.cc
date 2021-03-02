@@ -18,7 +18,7 @@ Window::~Window()
 void Window::drawBorders()
 {
 	//	Color the border depending on whether the window is active
-	Color::Name fg = isFocused ? Color::Green : Color::White;
+	Color::Name fg = isFocused ? Color::White : Color::Gray;
 	setColor(fg, Color::Black);
 
 	box(window, 0, 0);
