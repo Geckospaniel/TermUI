@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 #include <string>
+#include <sstream>
 
 class Window
 {

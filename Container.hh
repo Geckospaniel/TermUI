@@ -14,19 +14,22 @@ public:
 		children.push_back(new T(std::forward <Args> (args)...));
 		Window* child = children.back();
 
-		Vector2 pos = translatePosition(child->start);
-		child->size = translatePosition(child->end - child->start);
+		Vector2 tStart = translatePosition(child->start);
+		Vector2 tEnd = translatePosition(child->end);
 
-		//	TODO check somewhere if end is less than start
-		unsigned columns = child->size.x;
-		unsigned rows = child->size.y;
+		//	FIXME check if tEnd is less than tStart
+		child->size = tEnd - tStart;
 
 		//	Create the window relative to parent window and save parent
-		child->window = derwin(window, rows, columns, pos.y, pos.x);
+		child->window = derwin(window, child->size.y, child->size.x, tStart.y, tStart.x);
 		child->parent = this;
 
 		//	Ignore borders in the size
 		child->size -= Vector2(2, 2);
+
+		std::stringstream ss;
+		ss << child->size.x << " " << child->size.y;
+		child->title = ss.str();
 
 		//	Always focus on the latest window
 		child->stealFocus();

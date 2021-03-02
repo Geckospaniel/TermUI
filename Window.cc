@@ -28,7 +28,7 @@ void Window::drawBorders()
 	//	If the title is too long, cut the overflow and signal the user that it doesn't fit
 	if(title.length() > static_cast <size_t> (getmaxx(window)))
 	{
-		windowTitle.erase(windowTitle.begin() + getmaxx(window) - 5, windowTitle.end());
+		windowTitle.erase(windowTitle.begin() + size.x - 3, windowTitle.end());
 		windowTitle += std::string("...");
 	}
 
@@ -49,7 +49,7 @@ void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
 	{
 		//	Initialize a padding that fills the line on both sides
 		leftPadding = std::string(x, ' ');
-		rightPadding = std::string(getmaxx(window) - x - str.length() - 2, ' ');
+		rightPadding = std::string(size.x - x - str.length(), ' ');
 
 		x = 0;
 	}
