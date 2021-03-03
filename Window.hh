@@ -50,7 +50,6 @@ protected:
 	bool needsRedraw = true;
 	bool isFocused = false;
 
-	std::string title;
 	Vector2 size;
 
 private:
@@ -60,10 +59,12 @@ private:
 	friend class Container;
 
 	//	Only container and window implement these
+	virtual void resizeWindow();
 	virtual void setActiveChild() {}
 	virtual void handleEvent(Event event);
 
 	bool wantsFocus = false;
+	std::string title;
 
 	Vector2 start;
 	Vector2 end;

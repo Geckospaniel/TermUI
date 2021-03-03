@@ -61,6 +61,7 @@ void Container::draw()
 		if(child->needsRedraw)
 		{
 			child->drawBorders();
+			touchwin(child->window);
 			wrefresh(child->window);
 
 			child->needsRedraw = false;
@@ -74,8 +75,19 @@ void Container::handleEvent(Event event)
 	if(event.type == Event::Type::None)
 	{
 		int c = wgetch(window);
-		event.type = Event::Type::KeyPress;
-		event.value.key = c;
+
+		//	If there's a resize, update each window
+		if(c == KEY_RESIZE)
+		{
+			resizeWindow();
+			return;
+		}
+
+		else
+		{
+			event.type = Event::Type::KeyPress;
+			event.value.key = c;
+		}
 	}
 
 	//	Send events to the active window
@@ -105,6 +117,14 @@ void Container::setActiveChild()
 			child->isFocused = false;
 		}
 	}
+}
+
+void Container::resizeWindow()
+{
+	Window::resizeWindow();
+
+	for(auto& child : children)
+		child->resizeWindow();
 }
 
 void Container::update()

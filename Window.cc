@@ -69,6 +69,38 @@ Vector2 Window::translatePosition(const Vector2& position)
 	);
 }
 
+void Window::resizeWindow()
+{
+	//	If this is the root window, resize to terminal size
+	if(parent == nullptr)
+	{
+		wresize(window, LINES, COLS);
+		wclear(window);
+	}
+
+	//	If this is a child window
+	else
+	{
+		//	Recalculate the position and size
+		Vector2 tStart = parent->translatePosition(start);
+		Vector2 tEnd = parent->translatePosition(end);
+		size = tEnd - tStart;
+
+		//	Resize and move the ncurses window
+		mvderwin(window, tStart.y, tStart.x);
+		wresize(window, size.y, size.x);
+
+		size -= Vector2(2, 2);
+		wclear(window);
+
+		std::stringstream ss;
+		ss << size.x << " " << size.y << " : " << tStart.x << " " << tStart.y;
+		title = ss.str();
+	}
+
+	needsRedraw = true;
+}
+
 void Window::handleEvent(Event event)
 {
 	switch(event.type)

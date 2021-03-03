@@ -26,7 +26,7 @@ void Logger::draw()
 			case LogLevel::Warning: fg = Color::LightYellow; break;
 		}
 
-		setColor(fg, Color::Black);
+		setColor(i == cursorPosition ? Color::Cyan : fg, Color::Black);
 		drawTextLine(messages[i].msg, 0, i - offset, true);
 	}
 }

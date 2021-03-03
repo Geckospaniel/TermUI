@@ -14,10 +14,10 @@ public:
 		children.push_back(new T(std::forward <Args> (args)...));
 		Window* child = children.back();
 
+		//	FIXME Make sure that Start if less than End
 		Vector2 tStart = translatePosition(child->start);
 		Vector2 tEnd = translatePosition(child->end);
 
-		//	FIXME check if tEnd is less than tStart
 		child->size = tEnd - tStart;
 
 		//	Create a window relative to the parent window and save the parent
@@ -28,7 +28,7 @@ public:
 		child->size -= Vector2(2, 2);
 
 		std::stringstream ss;
-		ss << child->size.x << " " << child->size.y;
+		ss << "Size " << child->size.x << " " << child->size.y << " Position " << tStart.x << " " << tStart.y;
 		child->title = ss.str();
 
 		//	Always focus on the latest window
@@ -49,6 +49,7 @@ public:
 private:
 	void handleEvent(Event event) override;
 	void setActiveChild() override;
+	void resizeWindow() override;
 	void draw() override;
 
 	Window* activeChild = nullptr;
