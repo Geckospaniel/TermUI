@@ -22,7 +22,6 @@ void Window::drawBorders()
 	setColor(fg, Color::Black);
 
 	box(window, 0, 0);
-
 	std::string windowTitle = title;
 
 	//	If the title is too long, cut the overflow and signal the user that it doesn't fit

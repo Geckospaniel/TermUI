@@ -34,6 +34,8 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	//	Hide the cursor
 	curs_set(0);
 
+	cbreak();
+
 	isFocused = true;
 	isInitialized = true;
 }
@@ -76,10 +78,17 @@ void Container::handleEvent(Event event)
 	{
 		int c = wgetch(window);
 
+		/*	FIXME there's a really odd bug where when the
+		 *	terminal gets resized, every window will resize
+		 *	how they are supposed to, but the next redraw the
+		 *	active window goes to its last position. Resizing
+		 *	every time fixes it though but is wasteful	*/
+		resizeWindow();
+
 		//	If there's a resize, update each window
 		if(c == KEY_RESIZE)
 		{
-			resizeWindow();
+			//resizeWindow();
 			return;
 		}
 
