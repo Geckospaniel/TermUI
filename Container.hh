@@ -19,6 +19,7 @@ public:
 		Vector2 tEnd = translatePosition(child->end);
 
 		child->size = tEnd - tStart;
+		child->translatedStart = tStart;
 
 		//	Create a window relative to the parent window and save the parent
 		child->window = derwin(window, child->size.y, child->size.x, tStart.y, tStart.x);
@@ -47,6 +48,7 @@ public:
 	void update() override;
 
 private:
+	bool checkMouseFocus(Event event) override;
 	void handleEvent(Event event) override;
 	void setActiveChild() override;
 	void resizeWindow() override;

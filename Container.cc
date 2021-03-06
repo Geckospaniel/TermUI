@@ -34,8 +34,6 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	//	Hide the cursor
 	curs_set(0);
 
-	cbreak();
-
 	isFocused = true;
 	isInitialized = true;
 }
@@ -92,6 +90,25 @@ void Container::handleEvent(Event event)
 			return;
 		}
 
+		if(c == KEY_MOUSE)
+		{
+			MEVENT mouseEvent;
+
+			if(getmouse(&mouseEvent) == OK)
+			{
+				event.type = Event::Type::Mouse;
+
+				//	Fill the mouse event info
+				event.value.mouseInfo.leftDown = mouseEvent.bstate & BUTTON1_PRESSED;
+				event.value.mouseInfo.x = mouseEvent.x;
+				event.value.mouseInfo.y = mouseEvent.y;
+
+				//	If left click is held down, handle window focus
+				//if(event.value.mouseInfo.leftDown)
+					checkMouseFocus(event);
+			}
+		}
+
 		else
 		{
 			event.type = Event::Type::KeyPress;
@@ -126,6 +143,25 @@ void Container::setActiveChild()
 			child->isFocused = false;
 		}
 	}
+}
+
+bool Container::checkMouseFocus(Event event)
+{
+	event.value.mouseInfo.x -= translatedStart.x;
+	event.value.mouseInfo.y -= translatedStart.y;
+
+	for(auto& child : children)
+	{
+		//	If the mouse is inside some child window, focus on it
+		if(child->checkMouseFocus(event))
+		{
+			child->stealFocus();
+			return false;
+		}
+	}
+
+	//	Mouse wasn't inside this container
+	return false;
 }
 
 void Container::resizeWindow()

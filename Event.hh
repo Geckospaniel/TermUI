@@ -13,13 +13,15 @@ struct Event
 		{
 			int x;
 			int y;
+
+			bool leftDown;
 		} mouseInfo;
 	};
 
 	enum class Type
 	{
 		KeyPress,
-		MouseClick,
+		Mouse,
 		None
 	};
 

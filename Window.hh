@@ -31,6 +31,7 @@ protected:
 	virtual void draw() {}
 	virtual void update() {}
 	virtual void onKeyPress(int) {}
+	virtual void onMouseEvent(Vector2, bool) {}
 
 	void drawTextLine(const std::string& str, int x, int y, bool fillLine);
 	void drawBorders();
@@ -51,6 +52,7 @@ protected:
 	bool isFocused = false;
 
 	Vector2 size;
+	bool canFocus = true;
 
 private:
 	//	TODO maybe create a buffer used in drawing?
@@ -62,9 +64,13 @@ private:
 	virtual void resizeWindow();
 	virtual void setActiveChild() {}
 	virtual void handleEvent(Event event);
+	virtual bool checkMouseFocus(Event event);
 
 	bool wantsFocus = false;
 	std::string title;
+
+	//	Start but percentage -> coordinate
+	Vector2 translatedStart;
 
 	Vector2 start;
 	Vector2 end;

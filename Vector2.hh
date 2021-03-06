@@ -12,6 +12,9 @@ struct Vector2
 	void operator+=(const Vector2& rhs) { x += rhs.x; y += rhs.y; }
 	void operator-=(const Vector2& rhs) { x -= rhs.x; y -= rhs.y; }
 
+	bool operator<(const Vector2& rhs) { return x < rhs.x && y < rhs.y; }
+	bool operator>(const Vector2& rhs) { return x > rhs.x && y > rhs.y; }
+
 	int x;
 	int y;
 };

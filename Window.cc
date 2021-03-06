@@ -90,6 +90,7 @@ void Window::resizeWindow()
 		wresize(window, size.y, size.x);
 
 		size -= Vector2(2, 2);
+		translatedStart = tStart;
 		wclear(window);
 
 		std::stringstream ss;
@@ -108,13 +109,37 @@ void Window::handleEvent(Event event)
 			onKeyPress(event.value.key);
 		break;
 
-		case Event::Type::MouseClick: break;
+		case Event::Type::Mouse:
+		{
+			Vector2 mousePos(event.value.mouseInfo.x, event.value.mouseInfo.y);
+
+			/*	Since the mouse coordinate is given in 0 - terminal size,
+			 *	subtract window position from it to get the coordinate relative to the window */
+			mousePos -= translatedStart;
+
+			//	Call the event handler
+			onMouseEvent(mousePos, event.value.mouseInfo.leftDown);
+			break;
+		}
+
 		case Event::Type::None: break;
 	}
 }
 
+bool Window::checkMouseFocus(Event event)
+{
+	Vector2 mousePos(event.value.mouseInfo.x, event.value.mouseInfo.y);
+	mousePos -= translatedStart;
+
+	//	Is the cursor inside the window
+	return mousePos > Vector2(0, 0) && mousePos < Vector2(getmaxx(window), getmaxy(window));
+}
+
 void Window::stealFocus()
 {
+	if(!canFocus)
+		return;
+
 	//	Climb all the way to root and request focus
 	if(parent != nullptr)
 	{

@@ -32,6 +32,7 @@ public:
 		levelUsed[static_cast <size_t> (l)] = state;
 	}
 
+	void onMouseEvent(Vector2 mouse, bool leftDown) override;
 	void onKeyPress(int key) override;
 	void draw() override;
 
