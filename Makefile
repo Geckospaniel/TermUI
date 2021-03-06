@@ -1,10 +1,8 @@
 HEADER	=	$(wildcard *.hh)
 SOURCE	=	$(wildcard *.cc)
-OBJECT	+=	$(addprefix obj/,$(addsuffix .o,$(SOURCE)))
+OBJECT	=	$(addprefix obj/,$(addsuffix .o,$(SOURCE)))
 
 build: obj/ $(OBJECT)
-	@echo $(OBJECT)
-	@g++ -o x $(OBJECT) ../obj/*.o -lncurses
 
 obj/%.cc.o:	%.cc $(HEADER)
 	@echo "Building $<"
