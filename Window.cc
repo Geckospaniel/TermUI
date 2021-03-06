@@ -41,6 +41,15 @@ void Window::drawBorders()
 
 void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
 {
+	std::string text = str;
+
+	//	If the string is too long, cut the overflow and signal the user that it doesn't fit
+	if(str.length() > static_cast <size_t> (size.x))
+	{
+		text.erase(text.begin() + size.x - 3, text.end());
+		text += std::string("...");
+	}
+
 	std::string leftPadding;
 	std::string rightPadding;
 
@@ -48,7 +57,7 @@ void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
 	{
 		//	Initialize a padding that fills the line on both sides
 		leftPadding = std::string(x, ' ');
-		rightPadding = std::string(size.x - x - str.length(), ' ');
+		rightPadding = std::string(size.x - x - text.length(), ' ');
 
 		x = 0;
 	}
@@ -56,7 +65,7 @@ void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
 	/*	Increment x and y so that 0 0 is the origin instead of 1 1 and
 	 *	print the string with padding if there's any */
 	mvwprintw(window, ++y, ++x, "%s%s%s", leftPadding.c_str(),
-										  str.c_str(),
+										  text.c_str(),
 										  rightPadding.c_str());
 }
 
@@ -137,9 +146,6 @@ bool Window::checkMouseFocus(Event event)
 
 void Window::stealFocus()
 {
-	if(!canFocus)
-		return;
-
 	//	Climb all the way to root and request focus
 	if(parent != nullptr)
 	{

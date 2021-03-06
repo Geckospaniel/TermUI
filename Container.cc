@@ -29,7 +29,8 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 	keypad(window, true);
 
 	//	Support mouse input
-	mousemask(ALL_MOUSE_EVENTS, NULL);
+	mousemask(BUTTON1_PRESSED | BUTTON2_PRESSED, NULL);
+	//mousemask(ALL_MOUSE_EVENTS, NULL);
 
 	//	Hide the cursor
 	curs_set(0);
@@ -90,6 +91,7 @@ void Container::handleEvent(Event event)
 			return;
 		}
 
+		//	If there's mouse input, it's a mouse event
 		if(c == KEY_MOUSE)
 		{
 			MEVENT mouseEvent;
@@ -99,16 +101,17 @@ void Container::handleEvent(Event event)
 				event.type = Event::Type::Mouse;
 
 				//	Fill the mouse event info
-				event.value.mouseInfo.leftDown = mouseEvent.bstate & BUTTON1_PRESSED;
+				event.value.mouseInfo.leftDown = (mouseEvent.bstate & BUTTON1_PRESSED);
 				event.value.mouseInfo.x = mouseEvent.x;
 				event.value.mouseInfo.y = mouseEvent.y;
 
 				//	If left click is held down, handle window focus
-				//if(event.value.mouseInfo.leftDown)
+				if(event.value.mouseInfo.leftDown)
 					checkMouseFocus(event);
 			}
 		}
 
+		//	Otherwise it's key input
 		else
 		{
 			event.type = Event::Type::KeyPress;

@@ -52,7 +52,6 @@ protected:
 	bool isFocused = false;
 
 	Vector2 size;
-	bool canFocus = true;
 
 private:
 	//	TODO maybe create a buffer used in drawing?
