@@ -2,28 +2,42 @@
 #include "../Logger.hh"
 #include "../Menu.hh"
 
+#include <thread>
+#include <chrono>
+
 int main()
 {
-	Container root;
+	Container root(false);
 
 	Logger& side1 = root.create <Logger> (Vector2(5, 5), Vector2(50, 50), true);
 	Menu& side2 = root.create <Menu> (Vector2(50, 5), Vector2(95, 95));
-	Container& side3 = root.create <Container> (Vector2(5, 50), Vector2(50, 95));
-
-	Logger& cont1 = side3.create <Logger> (Vector2(5, 5), Vector2(50, 50), true);
-	Logger& cont2 = side3.create <Logger> (Vector2(5, 50), Vector2(50, 95), true);
-	Logger& cont3 = side3.create <Logger> (Vector2(50, 5), Vector2(95, 50), true);
 
 	MenuEntry& test = side2.root.add("test");
-	MenuEntry& test2 = side2.root.add("test2");
+	test.onSelect = [&root, &side2]()
+	{
+		auto waitForSubmit = [](Menu& prompt, Menu& s2)
+		{
+			MenuEntry& ok = prompt.root.add("moi");
+			bool done = false;
 
-	MenuEntry& testsub1 = test.add("testsub1");
-	MenuEntry& testsub2 = test.add("testsub2");
+			ok.onSelect = [&done]()
+			{
+				done = true;
+			};
 
-	for(int i = 0; i < 100; i++)
-		side1.addMessage(LogLevel::Warning, i);
+			while(!done)
+			{
+				std::this_thread::sleep_for(std::chrono::seconds(1));
+				s2.root.add("ok");
+			}
 
-	cont1.stealFocus();
+			prompt.root.add("Is done");
+		};
+
+		Menu& prompt = root.create <Menu> (Vector2(5, 50), Vector2(50, 95));
+		std::thread th(waitForSubmit, std::ref(prompt), std::ref(side2));
+		th.detach();
+	};
 
 	while(true)
 	{
