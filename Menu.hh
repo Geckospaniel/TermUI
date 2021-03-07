@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+class Menu;
 class MenuEntry
 {
 public:
@@ -32,6 +33,9 @@ private:
 	//	Which menu is active and parent of this menu
 	MenuEntry* active = nullptr;
 	MenuEntry* parent = nullptr;
+
+	//	Save the menu so when adding new items, there will be a redraw
+	Menu* menu;
 };
 
 class Menu : public Window
@@ -40,11 +44,13 @@ public:
 	Menu(const Vector2& start, const Vector2& end) :
 		Window(start, end)
 	{
+		root.menu = this;
 	}
 
 	void draw() override;
 	void onKeyPress(int key) override;
 
+	inline void setRedraw() { needsRedraw = true; }
 	MenuEntry root;
 };
 

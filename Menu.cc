@@ -4,6 +4,11 @@ MenuEntry& MenuEntry::add(const std::string& name)
 {
 	MenuEntry* next = new MenuEntry();
 	next->parent = this;
+	next->menu = menu;
+
+	//	TODO set redraw if this is the active menu
+	//	Redraw the newly added item
+	menu->setRedraw();
 
 	entries.push_back( { next, name } );
 	return *next;
