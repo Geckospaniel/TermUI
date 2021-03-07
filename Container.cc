@@ -1,7 +1,7 @@
 #include "Container.hh"
 #include "Color.hh"
 
-Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
+Container::Container(bool blockOnInput) : Window(Vector2(0, 0), Vector2(100, 100))
 {
 	static bool isInitialized = false;
 
@@ -34,6 +34,9 @@ Container::Container() : Window(Vector2(0, 0), Vector2(100, 100))
 
 	//	Hide the cursor
 	curs_set(0);
+
+	// If set, don't block on getch
+	nodelay(window, !blockOnInput);
 
 	isFocused = true;
 	isInitialized = true;
@@ -82,7 +85,7 @@ void Container::handleEvent(Event event)
 		 *	how they are supposed to, but the next redraw the
 		 *	active window goes to its last position. Resizing
 		 *	every time fixes it though but is wasteful	*/
-		resizeWindow();
+		//resizeWindow();
 
 		//	If there's a resize, update each window
 		if(c == KEY_RESIZE)
@@ -144,6 +147,7 @@ void Container::setActiveChild()
 		{
 			//	Unfocus any windows that don't want it
 			child->isFocused = false;
+			child->needsRedraw = true;
 		}
 	}
 }

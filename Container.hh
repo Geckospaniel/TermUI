@@ -39,7 +39,7 @@ public:
 	}
 
 	//	Initializes ncurses
-	Container();
+	Container(bool blockOnInput);
 	~Container();
 
 	//	Creates a child container
