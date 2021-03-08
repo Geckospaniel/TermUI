@@ -15,9 +15,10 @@ int main()
 	MenuEntry& test = side2.root.add("test");
 	test.onSelect = [&root, &side2]()
 	{
-		auto waitForSubmit = [](Menu& prompt, Menu& s2)
+		auto waitForSubmit = [](Container& c, Menu& s2)
 		{
-			MenuEntry& ok = prompt.root.add("moi");
+			Menu& inner = c.create <Menu> (Vector2(10, 10), Vector2(90, 90));
+			MenuEntry& ok = inner.root.add("moi");
 			bool done = false;
 
 			ok.onSelect = [&done]()
@@ -28,20 +29,22 @@ int main()
 			while(!done)
 			{
 				std::this_thread::sleep_for(std::chrono::seconds(1));
-				s2.root.add("ok");
+				inner.root.add("ok");
 			}
 
-			prompt.root.add("Is done");
+			inner.root.add("Is done");
+			inner.close();
 		};
 
-		Menu& prompt = root.create <Menu> (Vector2(5, 50), Vector2(50, 95));
-		std::thread th(waitForSubmit, std::ref(prompt), std::ref(side2));
+		Container& c = root.create <Container> (Vector2(5, 50), Vector2(50, 95));
+		std::thread th(waitForSubmit, std::ref(c), std::ref(side2));
 		th.detach();
 	};
 
 	while(true)
 	{
 		root.update();
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
 	return 0;

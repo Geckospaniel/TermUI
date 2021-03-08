@@ -46,12 +46,16 @@ public:
 	Container(const Vector2& start, const Vector2& end);
 
 	void update() override;
+	void close() override;
 
 private:
+	//	Bunch of window management functions visible to window and container
+	void unsetAndRemove(Window* window) override;
 	bool checkMouseFocus(Event event) override;
 	void handleEvent(Event event) override;
 	void setActiveChild() override;
 	void resizeWindow() override;
+
 	void draw() override;
 
 	Window* activeChild = nullptr;

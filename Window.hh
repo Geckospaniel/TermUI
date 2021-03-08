@@ -20,6 +20,7 @@ public:
 	void stealFocus();
 	void setTitle(const std::string& str);
 
+	virtual void close();
 	std::function <void()> onFocus;
 
 protected:
@@ -59,11 +60,12 @@ private:
 	//	Container needs exclusive access to private members
 	friend class Container;
 
-	//	Only container and window implement these
+	//	Bunch of window management functions visible to window and container
 	virtual void resizeWindow();
 	virtual void setActiveChild() {}
 	virtual void handleEvent(Event event);
 	virtual bool checkMouseFocus(Event event);
+	virtual void unsetAndRemove(Window*) {}
 
 	bool wantsFocus = false;
 	std::string title;

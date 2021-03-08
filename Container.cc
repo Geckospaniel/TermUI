@@ -44,9 +44,7 @@ Container::Container(bool blockOnInput) : Window(Vector2(0, 0), Vector2(100, 100
 
 Container::~Container()
 {
-	//	Deallocate each child
-	for(auto& child : children)
-		delete child;
+	close();
 }
 
 Container::Container(const Vector2& start, const Vector2& end) :
@@ -191,4 +189,35 @@ void Container::update()
 	//	Update each child
 	for(auto& child : children)
 		child->update();
+}
+
+void Container::unsetAndRemove(Window* window)
+{
+	//	If the window was active, unset it
+	if(activeChild == window)
+		activeChild = nullptr;
+
+	//	Remove the window from children and unset it
+	for(size_t i = 0; i < children.size(); i++)
+	{
+		if(children[i] == window)
+		{
+			children.erase(children.begin() + i);
+			needsRedraw = true;
+			return;
+		}
+	}
+}
+
+void Container::close()
+{
+	//	Close all child windows first
+	for(auto& child : children)
+	{
+		child->close();
+		delete child;
+	}
+
+	//	Close this container
+	Window::close();
 }

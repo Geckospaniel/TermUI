@@ -1,18 +1,26 @@
 #include "Window.hh"
 #include "Color.hh"
 
-#include <cmath>
-
 Window::~Window()
 {
-	bool isRoot = window == stdscr;
+	close();
+}
+
+void Window::close()
+{
+	bool isRoot = parent == nullptr;
+
+	//	Get the window off of the screen
+	wclear(window);
 
 	//	Deallocate the window
 	delwin(window);
 
 	//	If this has the root window, quit ncurses
-	if(isRoot)
-		endwin();
+	if(isRoot) endwin();
+
+	//	Else if the window is active, make it inactive
+	else parent->unsetAndRemove(this);
 }
 
 void Window::drawBorders()

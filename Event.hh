@@ -22,7 +22,7 @@ struct Event
 	{
 		KeyPress,
 		Mouse,
-		None
+		None,
 	};
 
 	ValueType value;
