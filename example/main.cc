@@ -2,6 +2,7 @@
 #include "../Logger.hh"
 #include "../Menu.hh"
 
+#include <mutex>
 #include <thread>
 #include <chrono>
 
@@ -15,7 +16,7 @@ int main()
 	MenuEntry& test = side2.root.add("test");
 	test.onSelect = [&root, &side2]()
 	{
-		auto waitForSubmit = [](Container& c, Menu& s2)
+		auto waitForSubmit = [](Container& c, Container& r)
 		{
 			Menu& inner = c.create <Menu> (Vector2(10, 10), Vector2(90, 90));
 			MenuEntry& ok = inner.root.add("moi");
@@ -33,11 +34,11 @@ int main()
 			}
 
 			inner.root.add("Is done");
-			inner.close();
+			r.close();
 		};
 
 		Container& c = root.create <Container> (Vector2(5, 50), Vector2(50, 95));
-		std::thread th(waitForSubmit, std::ref(c), std::ref(side2));
+		std::thread th(waitForSubmit, std::ref(c), std::ref(root));
 		th.detach();
 	};
 

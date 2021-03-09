@@ -65,7 +65,6 @@ private:
 	virtual void setActiveChild() {}
 	virtual void handleEvent(Event event);
 	virtual bool checkMouseFocus(Event event);
-	virtual void unsetAndRemove(Window*) {}
 
 	bool wantsFocus = false;
 	std::string title;

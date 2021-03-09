@@ -187,25 +187,23 @@ void Container::update()
 	}
 
 	//	Update each child
-	for(auto& child : children)
-		child->update();
-}
-
-void Container::unsetAndRemove(Window* window)
-{
-	//	If the window was active, unset it
-	if(activeChild == window)
-		activeChild = nullptr;
-
-	//	Remove the window from children and unset it
 	for(size_t i = 0; i < children.size(); i++)
 	{
-		if(children[i] == window)
+		//	Has the window closed?
+		if(children[i]->window == nullptr)
 		{
-			children.erase(children.begin() + i);
+			if(children[i] == activeChild)
+				activeChild = nullptr;
+
 			needsRedraw = true;
-			return;
+			delete children[i];
+			children.erase(children.begin() + i);
+			i--;
+
+			continue;
 		}
+
+		children[i]->update();
 	}
 }
 
@@ -213,10 +211,7 @@ void Container::close()
 {
 	//	Close all child windows first
 	for(auto& child : children)
-	{
 		child->close();
-		delete child;
-	}
 
 	//	Close this container
 	Window::close();

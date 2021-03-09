@@ -15,12 +15,10 @@ void Window::close()
 
 	//	Deallocate the window
 	delwin(window);
+	window = nullptr;
 
 	//	If this has the root window, quit ncurses
 	if(isRoot) endwin();
-
-	//	Else if the window is active, make it inactive
-	else parent->unsetAndRemove(this);
 }
 
 void Window::drawBorders()

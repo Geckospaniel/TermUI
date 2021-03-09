@@ -50,7 +50,6 @@ public:
 
 private:
 	//	Bunch of window management functions visible to window and container
-	void unsetAndRemove(Window* window) override;
 	bool checkMouseFocus(Event event) override;
 	void handleEvent(Event event) override;
 	void setActiveChild() override;
