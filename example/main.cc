@@ -2,7 +2,6 @@
 #include "../Logger.hh"
 #include "../Menu.hh"
 
-#include <mutex>
 #include <thread>
 #include <chrono>
 
@@ -38,7 +37,7 @@ int main()
 		};
 
 		Container& c = root.create <Container> (Vector2(5, 50), Vector2(50, 95));
-		std::thread th(waitForSubmit, std::ref(c), std::ref(root));
+		std::thread th(waitForSubmit, std::ref(c), std::ref(c));
 		th.detach();
 	};
 
