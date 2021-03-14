@@ -85,10 +85,10 @@ void Container::handleEvent(Event event)
 		 *	every time fixes it though but is wasteful	*/
 		//resizeWindow();
 
-		//	If there's a resize, update each window
+		//	If there's a terminal resize, resize each window
 		if(c == KEY_RESIZE)
 		{
-			//resizeWindow();
+			resizeWindow();
 			return;
 		}
 
@@ -96,7 +96,6 @@ void Container::handleEvent(Event event)
 		if(c == KEY_MOUSE)
 		{
 			MEVENT mouseEvent;
-
 			if(getmouse(&mouseEvent) == OK)
 			{
 				event.type = Event::Type::Mouse;
@@ -122,7 +121,9 @@ void Container::handleEvent(Event event)
 
 	//	Send events to the active window
 	if(activeChild != nullptr)
+	{
 		activeChild->handleEvent(event);
+	}
 }
 
 void Container::setActiveChild()
@@ -145,8 +146,9 @@ void Container::setActiveChild()
 		{
 			//	Unfocus any windows that don't want it
 			child->isFocused = false;
-			child->needsRedraw = true;
 		}
+
+		child->needsRedraw = true;
 	}
 }
 
@@ -190,7 +192,7 @@ void Container::update()
 	for(size_t i = 0; i < children.size(); i++)
 	{
 		//	Has the window closed?
-		if(children[i]->window == nullptr)
+		if(children[i]->window == NULL)
 		{
 			if(children[i] == activeChild)
 				activeChild = nullptr;
