@@ -53,5 +53,8 @@ void Logger::onKeyPress(int key)
 void Logger::onMouseEvent(Vector2 mouse, bool leftDown)
 {
 	if(leftDown)
+	{
 		addMessage(LogLevel::Debug, "Mouse at ", mouse.x, " ", mouse.y, " and left mouse ", leftDown);
+		needsRedraw = true;
+	}
 }
