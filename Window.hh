@@ -76,7 +76,7 @@ private:
 	Vector2 end;
 
 	Window* parent = nullptr;
-	WINDOW* window;
+	WINDOW* window = NULL;
 };
 
 #endif
