@@ -16,17 +16,18 @@ void Logger::draw()
 			continue;
 
 		Color::Name fg;
+		bool sel = i == cursorPosition;
 
 		//	Determine the message color
 		switch(messages[i].level)
 		{
-			case LogLevel::Debug: fg = Color::LightGreen; break;
-			case LogLevel::Error: fg = Color::Red; break;
+			case LogLevel::Debug: fg = sel ? Color::LightGreen : Color::Green; break;
+			case LogLevel::Error: fg = sel ? Color::LightRed : Color::Red; break;
 			case LogLevel::Normal: fg = Color::White; break;
 			case LogLevel::Warning: fg = Color::LightYellow; break;
 		}
 
-		setColor(i == cursorPosition ? Color::Cyan : fg, Color::Black);
+		setColor(fg, Color::Black);
 		drawTextLine(messages[i].msg, 0, i - offset, true);
 	}
 }
