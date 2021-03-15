@@ -48,7 +48,9 @@ public:
 		std::function <void(size_t, Block*)> printAll;
 		printAll = [&printAll, &debug](size_t indent, Block* b) -> void
 		{
-			debug.addMessage(LogLevel::Normal, "Block has ", b->instructions.size(), " instructions");
+			std::string ind(indent, ' ');
+			debug.addMessage(LogLevel::Normal, ind, "Block has ", b->instructions.size(), " instructions");
+
 			for(auto& ins : b->instructions)
 			{
 				if(!ins.isOperation)
@@ -57,7 +59,6 @@ public:
 					continue;
 				}
 
-				std::string ind(indent, ' ');
 				debug.addMessage(LogLevel::Normal, ind, ins.value.op);
 			}
 		};
@@ -98,6 +99,7 @@ private:
 
 		for(size_t i = start; i < end; i++)
 		{
+			debug.addMessage(LogLevel::Debug, "At ", i, " = ", src[i]);
 			//	Loop start
 			if(src[i] == '[')
 			{
@@ -109,18 +111,20 @@ private:
 				unsigned depth = 1;
 
 				size_t blockEnd;
-				size_t blockStart = ++i;
+				size_t blockStart = i + 1;
 
 				debug.addMessage(LogLevel::Debug, "Start at ", i);
 
 				//	Find the outermost matching brace
-				for(; depth > 0 && i < src.length(); i++)
+				for(i++; depth > 0 && i < src.length(); i++)
 				{
 					switch(src[i])
 					{
 						case '[': depth++; break;
 						case ']': depth--; break;
 					}
+
+					debug.addMessage(LogLevel::Debug, "Depth is ", depth, " at ", src[i], " ", i);
 				}
 
 				//	Is the block unterminated?
@@ -130,8 +134,11 @@ private:
 					return;
 				}
 
+				i--;
+				debug.addMessage(LogLevel::Debug, "After search i = ", i);
+
 				//	Set the end inside the braces
-				blockEnd = i - 1;
+				blockEnd = i;
 
 				//	Parse the inner block if it isn't empty
 				if(blockStart <= blockEnd)
@@ -147,6 +154,7 @@ private:
 
 			else
 			{
+				debug.addMessage(LogLevel::Debug, "Adding instruction ", src[i]);
 				b->instructions.push_back({});
 				b->instructions.back().isOperation = true;
 				b->instructions.back().value.op = src[i];
