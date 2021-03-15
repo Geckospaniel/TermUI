@@ -3,22 +3,30 @@
 MenuEntry& MenuEntry::add(const std::string& name)
 {
 	MenuEntry* next = new MenuEntry();
+
 	next->parent = this;
+	next->name = name;
 	next->menu = menu;
 
 	//	TODO set redraw if this is the active menu
 	//	Redraw the newly added item
 	menu->setRedraw();
 
-	entries.push_back( { next, name } );
+	entries.push_back(next);
 	return *next;
+}
+
+void MenuEntry::setName(const std::string& name)
+{
+	menu->setRedraw();
+	this->name = name;
 }
 
 void MenuEntry::clear()
 {
 	//	Deallocate the the sub menus
 	for(auto& entry : entries)
-		delete entry.subMenu;
+		delete entry;
 
 	//	Remove all entries
 	entries.clear();
@@ -53,7 +61,7 @@ void Menu::draw()
 			}
 
 			setColor(fg, bg);
-			drawTextLine(menu->entries[i].name, 0, i - offset, true);
+			drawTextLine(menu->entries[i]->name, 0, i - offset, true);
 		}
 	}
 }
@@ -76,7 +84,7 @@ void Menu::onKeyPress(int key)
 
 		case KEY_RIGHT: case 10:
 		{
-			MenuEntry* selectedMenu = menu->entries[menu->selected].subMenu;
+			MenuEntry* selectedMenu = menu->entries[menu->selected];
 
 			//	Call the selection callback
 			if(selectedMenu->onSelect)

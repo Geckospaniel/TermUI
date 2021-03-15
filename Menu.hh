@@ -11,6 +11,8 @@ class MenuEntry
 {
 public:
 	MenuEntry& add(const std::string& name);
+
+	void setName(const std::string& name);
 	void clear();
 
 	std::function <void()> onSelect;
@@ -19,13 +21,8 @@ private:
 	friend class Menu;
 	MenuEntry* findLastActive();
 
-	struct Entry
-	{
-		MenuEntry* subMenu;
-		std::string name;
-	};
-
-	std::vector <Entry> entries;
+	std::vector <MenuEntry*> entries;
+	std::string name;
 
 	//	Which menu entry is highlighted
 	size_t selected = 0;
