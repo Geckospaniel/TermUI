@@ -1,6 +1,7 @@
 #include "../../Container.hh"
 #include "../../Logger.hh"
 #include "../../Menu.hh"
+#include "../../Tree.hh"
 
 #include <fstream>
 #include <vector>
@@ -10,8 +11,8 @@
 class Program
 {
 public:
-	Program(const std::string& path, Logger& output, Logger& debug, Menu& cells)
-		: output(output), debug(debug), cells(cells)
+	Program(const std::string& path, Logger& output, Logger& debug, Tree& structure)
+		: output(output), debug(debug), structure(structure)
 	{
 		debug.addMessage(LogLevel::Debug, "Loading program ", path);
 
@@ -45,8 +46,8 @@ public:
 
 		parseBlock(source, &root, 0, source.length());
 
-		std::function <void(size_t, Block*)> printAll;
-		printAll = [&printAll, &debug](size_t indent, Block* b) -> void
+		std::function <void(size_t, Block*, TreeNode&)> printAll;
+		printAll = [&printAll, &debug](size_t indent, Block* b, TreeNode& p) -> void
 		{
 			std::string ind(indent, ' ');
 			debug.addMessage(LogLevel::Normal, ind, "Block has ", b->instructions.size(), " instructions");
@@ -55,15 +56,17 @@ public:
 			{
 				if(!ins.isOperation)
 				{
-					printAll(indent + 2, ins.value.inner);
+					TreeNode& t = p.add("block");
+					printAll(indent + 2, ins.value.inner, t);
 					continue;
 				}
 
 				debug.addMessage(LogLevel::Normal, ind, ins.value.op);
+				TreeNode& t = p.add(std::string("Ins: ") + (char)ins.value.op);
 			}
 		};
 
-		printAll(0, &root);
+		printAll(0, &root, structure.root);
 	}
 
 private:
@@ -169,7 +172,7 @@ private:
 
 	Logger& output;
 	Logger& debug;
-	Menu& cells;
+	Tree& structure;
 };
 
 int main()
@@ -177,11 +180,11 @@ int main()
 	Container root(true);
 
 	Menu& options = root.create <Menu> (Vector2(50, 10), Vector2(90, 50));
-	Menu& cells = root.create <Menu> (Vector2(50, 50), Vector2(90, 90));
+	Tree& structure = root.create <Tree> (Vector2(50, 50), Vector2(90, 90));
 	Logger& debug = root.create <Logger> (Vector2(10, 10), Vector2(50, 50), true);
 	Logger& output = root.create <Logger> (Vector2(10, 50), Vector2(50, 90), true);
 
-	Program prog("test.bf", output, debug, cells);
+	Program prog("test.bf", output, debug, structure);
 
 	while(true)
 	{
