@@ -13,6 +13,7 @@ int main()
 	TreeNode& a2_1 = a2.add("2_1");
 	TreeNode& a2_2 = a2.add("2_2");
 	TreeNode& a2_2_1 = a2_2.add("2_2_1");
+	TreeNode& a2_2_1_1 = a2_2_1.add("2_2_1_1");
 
 	TreeNode& a1_1 = a1.add("1_1");
 	TreeNode& a1_2 = a1.add("1_2");

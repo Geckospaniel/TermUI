@@ -3,7 +3,8 @@
 TreeNode& TreeNode::add(const std::string& name)
 {
 	TreeNode* child = new TreeNode;
-	child->name = name;
+	child->setName(name);
+	child->tree = tree;
 
 	children.push_back(child);
 	return *child;
@@ -12,6 +13,13 @@ TreeNode& TreeNode::add(const std::string& name)
 void TreeNode::setName(const std::string& name)
 {
 	this->name = name;
+	//tree->setRedraw();
+}
+
+void TreeNode::setExpanded(bool state)
+{
+	isExpanded = state;
+	//tree->setRedraw();
 }
 
 void Tree::onKeyPress(int key)
@@ -29,19 +37,17 @@ void Tree::draw()
 	drawNode(&root, y, conn);
 }
 
-void Tree::drawNode(TreeNode* node, unsigned& y,
-					std::vector <bool>& connectionsBehind)
+void Tree::drawNode(TreeNode* node, unsigned& y, std::vector <bool>& connectionsBehind)
 {
-	bool drawStraight = false;
-
 	for(size_t i = 0; i < node->children.size(); i++)
 	{
 		TreeNode* child = node->children[i];
+
 		std::string indentStr;
+		std::string nameStr;
 
 		//	Make the color more dim if it's unexpanded
 		Color::Name fg = child->isExpanded ? Color::White : Color::Gray;
-		setColor(fg, Color::Black);
 
 		//	Prevent the root node from drawing connections
 		if(!connectionsBehind.empty())
@@ -53,16 +59,20 @@ void Tree::drawNode(TreeNode* node, unsigned& y,
 			for(size_t c = 0; c < connectionsBehind.size(); c++)
 				indentStr += connectionsBehind[c] ? "| " : "  ";
 
-			//	Only the first connection is crooked
-			if(drawStraight) indentStr += "|__ ";
-			else indentStr += "\\__ ";
-
-			drawStraight = true;
+			//	Nice visuals
+			indentStr += "|";
+			nameStr += "__ ";
 		}
 
-		//	Display the child node name and connections
-		drawTextLine(indentStr + child->name, 0, y, true);
-		y++;
+		nameStr += child->name;
+
+		//	Display the indent and connections
+		setColor(Color::White, Color::Black);
+		drawTextLine(indentStr, 0, y, true);
+
+		//	Only make the actual node name more dim
+		setColor(fg, Color::Black);
+		drawTextLine(nameStr, indentStr.length(), y++, false);
 
 		//	Should the node contents be displayed?
 		if(!child->children.empty() && child->isExpanded)
