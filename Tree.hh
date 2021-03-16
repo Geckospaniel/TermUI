@@ -21,7 +21,7 @@ private:
 	bool isExpanded = true;
 	std::vector <TreeNode*> children;
 
-	//	Handle for the tree to indicate redraws
+	TreeNode* parent;
 	Tree* tree;
 };
 
@@ -36,12 +36,18 @@ public:
 	void onKeyPress(int key) override;
 	void draw() override;
 
-	inline void setRedraw() { needsRedraw = true; }
 	TreeNode root;
 
 private:
+	friend class TreeNode;
+
+	inline void setRedraw() { needsRedraw = true; }
 	void drawNode(TreeNode* node, unsigned& y, std::vector <bool>& connectionsBehind);
-	TreeNode* selected = nullptr;
+
+	TreeNode* selectedNode = &root;
+
+	size_t selected = 0;
+	size_t expandedNodes = 0;
 };
 
 #endif

@@ -1,29 +1,92 @@
 #include "Tree.hh"
 
+#include <functional>
+
 TreeNode& TreeNode::add(const std::string& name)
 {
 	TreeNode* child = new TreeNode;
-	child->setName(name);
-	child->tree = tree;
 
+	child->parent = this;
+	child->tree = tree;
+	tree->expandedNodes++;
+
+	child->setName(name);
 	children.push_back(child);
+
 	return *child;
 }
 
 void TreeNode::setName(const std::string& name)
 {
 	this->name = name;
-	//tree->setRedraw();
+	tree->setRedraw();
 }
 
 void TreeNode::setExpanded(bool state)
 {
+	//	Make sure that expandedNodes doesn't get too high
+	if(!isExpanded && state)
+		tree->expandedNodes++;
+
+	//	Make sure that expandedNodes doesn't get too low
+	else if(isExpanded && !state)
+		tree->expandedNodes--;
+
 	isExpanded = state;
-	//tree->setRedraw();
+	tree->setRedraw();
 }
 
 void Tree::onKeyPress(int key)
 {
+	std::function <TreeNode*(TreeNode*, size_t&)> findNode;
+	findNode = [this, &findNode](TreeNode* origin, size_t& pos) -> TreeNode*
+	{
+		TreeNode* current = origin;
+
+		//	Does the selection reach further?
+		if(pos >= selected)
+			return current;
+
+		//	Are there child nodes which can be set active?
+		if(current->isExpanded && !current->children.empty())
+		{
+			for(auto& child : current->children)
+			{
+				pos++;
+				TreeNode* result = findNode(child, pos);
+
+				if(result != nullptr)
+					return result;
+			}
+		}
+
+		return nullptr;
+	};
+
+	size_t pos = 0;
+
+	switch(key)
+	{
+		case KEY_DOWN:
+			//	Set the cursor at the beginning if it overflows
+			if(++selected > expandedNodes)
+				selected = 1;
+
+			//	Update the selected node
+			selectedNode = findNode(&root, pos);
+		break;
+
+		case KEY_UP:
+			//	Set the cursor at the end if it overflows
+			if(--selected <= 0)
+				selected = expandedNodes;
+
+			//	Update the selected node
+			selectedNode = findNode(&root, pos);
+		break;
+	}
+
+	needsRedraw = true;
 }
 
 void Tree::draw()
@@ -48,6 +111,7 @@ void Tree::drawNode(TreeNode* node, unsigned& y, std::vector <bool>& connections
 
 		//	Make the color more dim if it's unexpanded
 		Color::Name fg = child->isExpanded ? Color::White : Color::Gray;
+		Color::Name bg = Color::Black;
 
 		//	Prevent the root node from drawing connections
 		if(!connectionsBehind.empty())
@@ -70,8 +134,12 @@ void Tree::drawNode(TreeNode* node, unsigned& y, std::vector <bool>& connections
 		setColor(Color::White, Color::Black);
 		drawTextLine(indentStr, 0, y, true);
 
+		//	If this node is selected, highlight it
+		if(child == selectedNode)
+			fg = Color::LightWhite;
+
 		//	Only make the actual node name more dim
-		setColor(fg, Color::Black);
+		setColor(fg, bg);
 		drawTextLine(nameStr, indentStr.length(), y++, false);
 
 		//	Should the node contents be displayed?
