@@ -84,6 +84,11 @@ void Tree::onKeyPress(int key)
 			//	Update the selected node
 			selectedNode = findNode(&root, pos);
 		break;
+
+		case 10: case KEY_RIGHT:
+			Window::clear();
+			selectedNode->setExpanded(!selectedNode->isExpanded);
+		break;
 	}
 
 	needsRedraw = true;
