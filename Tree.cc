@@ -1,6 +1,8 @@
 #include "Tree.hh"
+#include "DebugHelper.hh"
 
 #include <functional>
+#include <sstream>
 
 TreeNode& TreeNode::add(const std::string& name)
 {
@@ -24,14 +26,26 @@ void TreeNode::setName(const std::string& name)
 
 void TreeNode::setExpanded(bool state)
 {
-	//	Make sure that expandedNodes doesn't get too high
-	if(!isExpanded && state)
-		tree->expandedNodes++;
+	//	No point in expanding/hiding without child nodes
+	if(children.empty())
+		return;
 
-	//	Make sure that expandedNodes doesn't get too low
-	else if(isExpanded && !state)
-		tree->expandedNodes--;
+	//	Hide/show children	
+	for(auto& child : children)
+	{
+		//	Make sure that expandedNodes doesn't get too high
+		if(state)
+			tree->expandedNodes++;
 
+		//	Make sure that expandedNodes doesn't get too low
+		else if(!state)
+			tree->expandedNodes--;
+
+		//	Recursively call the children
+		child->setExpanded(state);
+	}
+
+	//	If the node is hidden and parent is set hidden, don't hide it
 	isExpanded = state;
 	tree->setRedraw();
 }
@@ -88,6 +102,11 @@ void Tree::onKeyPress(int key)
 		case 10: case KEY_RIGHT:
 			Window::clear();
 			selectedNode->setExpanded(!selectedNode->isExpanded);
+
+			std::stringstream ss;
+			ss << expandedNodes;
+
+			setTitle(ss.str());
 		break;
 	}
 

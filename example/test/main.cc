@@ -1,10 +1,13 @@
 #include "../../Container.hh"
 #include "../../Tree.hh"
+#include "../../DebugHelper.hh"
 
 int main()
 {
 	Container root(true);
-	Tree& tree = root.create <Tree> (Vector2(10, 10), Vector2(90, 90));
+	Tree& tree = root.create <Tree> (Vector2(10, 10), Vector2(50, 90));
+	root.create <Tree> (Vector2(10, 10), Vector2(50, 90));
+	DebugHelper::logger = &root.create <Logger> (Vector2(50, 10), Vector2(90, 90), true);
 
 	TreeNode& a = tree.root.add("a");
 	TreeNode& a1 = a.add("1");
