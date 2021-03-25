@@ -47,7 +47,6 @@ public:
 	void draw() override;
 	void onKeyPress(int key) override;
 
-	inline void setRedraw() { needsRedraw = true; }
 	MenuEntry root;
 };
 

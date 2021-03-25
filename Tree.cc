@@ -2,7 +2,6 @@
 #include "DebugHelper.hh"
 
 #include <functional>
-#include <sstream>
 
 TreeNode& TreeNode::add(const std::string& name)
 {
@@ -102,22 +101,12 @@ void Tree::onKeyPress(int key)
 		case 10: case KEY_RIGHT:
 			Window::clear();
 			selectedNode->setExpanded(!selectedNode->isExpanded);
-
-			std::stringstream ss;
-			ss << expandedNodes;
-
-			setTitle(ss.str());
 		break;
 	}
-
-	needsRedraw = true;
 }
 
 void Tree::draw()
 {
-	if(!needsRedraw)
-		return;
-
 	std::vector <bool> conn;
 	unsigned y = 0;
 

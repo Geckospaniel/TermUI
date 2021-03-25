@@ -1,10 +1,9 @@
 #include "Logger.hh"
 
+#include <iomanip>
+
 void Logger::draw()
 {
-	if(!needsRedraw)
-		return;
-
 	const size_t scrollHeight = size.y;
 	size_t offset = cursorPosition >= scrollHeight ?
 					cursorPosition - scrollHeight + 1 : 0;
@@ -17,6 +16,7 @@ void Logger::draw()
 
 		Color::Name fg;
 		bool sel = i == cursorPosition;
+		size_t xPos = 0;
 
 		//	Determine the message color
 		switch(messages[i].level)
@@ -27,8 +27,21 @@ void Logger::draw()
 			case LogLevel::Warning: fg = Color::LightYellow; break;
 		}
 
+		if(showTimestamps)
+		{
+			std::stringstream ss;
+			std::time_t t = std::chrono::system_clock::to_time_t(messages[i].time);
+			ss << std::put_time(std::localtime(&t), "%H:%M:%S ");
+
+			setColor(Color::White, Color::Black);
+			drawTextLine(ss.str(), 0, i - offset, true);
+			xPos += ss.str().length();
+		}
+
 		setColor(fg, Color::Black);
-		drawTextLine(messages[i].msg, 0, i - offset, true);
+
+		//	If the timestamp has been drawn, draw the message after it
+		drawTextLine(messages[i].msg, xPos, i - offset, !showTimestamps);
 	}
 }
 
@@ -46,15 +59,10 @@ void Logger::onKeyPress(int key)
 				cursorPosition = 0;
 		break;
 	}
-	
-	needsRedraw = true;
 }
 
 void Logger::onMouseEvent(Vector2 mouse, bool leftDown)
 {
 	if(leftDown)
-	{
 		addMessage(LogLevel::Debug, "Mouse at ", mouse.x, " ", mouse.y, " and left mouse ", leftDown);
-		needsRedraw = true;
-	}
 }

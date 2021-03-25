@@ -1,3 +1,4 @@
+#include "DebugHelper.hh"
 #include "Container.hh"
 #include "Color.hh"
 
@@ -56,19 +57,22 @@ void Container::draw()
 {
 	for(auto& child : children)
 	{
-		/*	TODO think of some clever way to eliminate the need
-		 *	to check needsRedraw in other window classes */
-		child->draw();
-
 		if(child->needsRedraw)
 		{
+			DebugHelper::logger->addMessage(LogLevel::Debug, "Drawing ", child->title, " (child of ", title, ")");
+
+			child->draw();
 			child->drawBorders();
 			touchwin(child->window);
 			wrefresh(child->window);
 
+			//	Child has been drawn
 			child->needsRedraw = false;
 		}
 	}
+
+	//	This container has been drawn
+	needsRedraw = false;
 }
 
 void Container::handleEvent(Event event)
@@ -77,6 +81,10 @@ void Container::handleEvent(Event event)
 	if(event.type == Event::Type::None)
 	{
 		int c = wgetch(window);
+
+		//	Was there any input?
+		if(c == ERR)
+			return;
 
 		/*	FIXME there's a really odd bug where when the
 		 *	terminal gets resized, every window will resize
@@ -121,9 +129,7 @@ void Container::handleEvent(Event event)
 
 	//	Send events to the active window
 	if(activeChild != nullptr)
-	{
 		activeChild->handleEvent(event);
-	}
 }
 
 void Container::setActiveChild()
@@ -132,6 +138,9 @@ void Container::setActiveChild()
 	{
 		if(child->wantsFocus)
 		{
+			if(DebugHelper::logger != nullptr)
+				DebugHelper::logger->addMessage(LogLevel::Debug, "Child ", child->title, " wants focus");
+
 			//	If a window wants the focus, set it as active
 			activeChild = child;
 			activeChild->isFocused = true;
@@ -139,16 +148,19 @@ void Container::setActiveChild()
 			
 			//	Call the window focus callback
 			if(activeChild->onFocus)
+			{
+				activeChild->setActiveChild();
 				activeChild->onFocus();
+			}
 		}
 
 		else
 		{
-			//	Unfocus any windows that don't want it
+			//	Unfocus any windows that don't want the focus
 			child->isFocused = false;
 		}
 
-		child->needsRedraw = true;
+		child->setRedraw();
 	}
 }
 
@@ -197,7 +209,7 @@ void Container::update()
 			if(children[i] == activeChild)
 				activeChild = nullptr;
 
-			needsRedraw = true;
+			setRedraw();
 			delete children[i];
 			children.erase(children.begin() + i);
 			i--;

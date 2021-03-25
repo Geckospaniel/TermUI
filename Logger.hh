@@ -6,6 +6,7 @@
 #include <utility>
 #include <sstream>
 #include <vector>
+#include <chrono>
 #include <string>
 #include <array>
 
@@ -39,17 +40,21 @@ public:
 	template <typename... Args>
 	void addMessage(LogLevel l, Args&& ...args)
 	{
+		//	Current time
+		auto time = std::chrono::system_clock::now();
+
 		//	Save all the arguments with a fold expression
 		std::ostringstream ss;
 		((ss << args), ...);
 
 		cursorPosition = messages.size();
-		messages.push_back( { ss.str(), l } );
+		messages.push_back( { time, ss.str(), l } );
 	}
 	
 private:
 	struct Message
 	{
+		std::chrono::time_point <std::chrono::system_clock> time;
 		std::string msg;
 		LogLevel level;
 	};

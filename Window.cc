@@ -1,3 +1,4 @@
+#include "DebugHelper.hh"
 #include "Window.hh"
 #include "Color.hh"
 
@@ -40,9 +41,6 @@ void Window::drawBorders()
 	//	Print the title in the top middle of the box
 	unsigned titleX = getmaxx(window) / 2 - windowTitle.length() / 2;
 	mvwprintw(window, 0, titleX, "%s", windowTitle.c_str());
-
-	//	If borders are drawn, we can assume other stuff is drawn so reset needsRedraw
-	needsRedraw = false;
 }
 
 void Window::drawTextLine(const std::string& str, int x, int y, bool fillLine)
@@ -107,13 +105,9 @@ void Window::resizeWindow()
 		size -= Vector2(2, 2);
 		translatedStart = tStart;
 		wclear(window);
-
-		std::stringstream ss;
-		ss << size.x << " " << size.y << " : " << tStart.x << " " << tStart.y;
-		title = ss.str();
 	}
 
-	needsRedraw = true;
+	setRedraw();
 }
 
 void Window::handleEvent(Event event)
@@ -139,6 +133,8 @@ void Window::handleEvent(Event event)
 
 		case Event::Type::None: break;
 	}
+
+	setRedraw();
 }
 
 bool Window::checkMouseFocus(Event event)
@@ -159,11 +155,20 @@ void Window::stealFocus()
 		parent->stealFocus();
 	}
 
-	setActiveChild();
+	else setActiveChild();
+}
+
+void Window::setRedraw()
+{
+	//	Redraw the parent containers too
+	if(parent != nullptr)
+		parent->setRedraw();
+
+	needsRedraw = true;
 }
 
 void Window::setTitle(const std::string& str)
 {
 	title = str;
-	needsRedraw = true;
+	setRedraw();
 }

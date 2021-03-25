@@ -28,10 +28,6 @@ public:
 		//	Ignore borders in the size
 		child->size -= Vector2(2, 2);
 
-		std::stringstream ss;
-		ss << "Size " << child->size.x << " " << child->size.y << " Position " << tStart.x << " " << tStart.y;
-		child->title = ss.str();
-
 		//	Always focus on the latest window
 		child->stealFocus();
 

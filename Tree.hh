@@ -41,9 +41,7 @@ public:
 private:
 	friend class TreeNode;
 
-	inline void setRedraw() { needsRedraw = true; }
 	void drawNode(TreeNode* node, unsigned& y, std::vector <bool>& connectionsBehind);
-
 	TreeNode* selectedNode = &root;
 
 	size_t selected = 0;

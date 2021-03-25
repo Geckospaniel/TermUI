@@ -41,28 +41,25 @@ MenuEntry* MenuEntry::findLastActive()
 
 void Menu::draw()
 {
-	if(needsRedraw)
+	MenuEntry* menu = root.findLastActive();
+
+	size_t scrollAt = size.y;
+	size_t offset = menu->selected >= scrollAt ? menu->selected - scrollAt + 1 : 0;
+
+	for(size_t i = offset; i < menu->entries.size(); i++)
 	{
-		MenuEntry* menu = root.findLastActive();
+		Color::Name fg = isFocused ? Color::White : Color::Gray;
+		Color::Name bg = Color::Black;
 
-		size_t scrollAt = size.y;
-		size_t offset = menu->selected >= scrollAt ? menu->selected - scrollAt + 1 : 0;
-
-		for(size_t i = offset; i < menu->entries.size(); i++)
+		//	Highlight if this is the active menu
+		if(i == menu->selected)
 		{
-			Color::Name fg = isFocused ? Color::White : Color::Gray;
-			Color::Name bg = Color::Black;
-
-			//	Highlight if this is the active menu
-			if(i == menu->selected)
-			{
-				fg = Color::Black;
-				bg = isFocused ? Color::White : Color::Gray;
-			}
-
-			setColor(fg, bg);
-			drawTextLine(menu->entries[i]->name, 0, i - offset, true);
+			fg = Color::Black;
+			bg = isFocused ? Color::White : Color::Gray;
 		}
+
+		setColor(fg, bg);
+		drawTextLine(menu->entries[i]->name, 0, i - offset, true);
 	}
 }
 
@@ -110,6 +107,4 @@ void Menu::onKeyPress(int key)
 			}
 		break;
 	}
-
-	needsRedraw = true;
 }

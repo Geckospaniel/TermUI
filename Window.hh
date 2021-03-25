@@ -18,6 +18,7 @@ public:
 	virtual ~Window();
 
 	void stealFocus();
+	void setRedraw();
 	void setTitle(const std::string& str);
 
 	virtual void close();
@@ -49,9 +50,7 @@ protected:
 		wclear(window);
 	}
 
-	bool needsRedraw = true;
 	bool isFocused = false;
-
 	Vector2 size;
 
 private:
@@ -67,6 +66,8 @@ private:
 	virtual bool checkMouseFocus(Event event);
 
 	bool wantsFocus = false;
+	bool needsRedraw = true;
+
 	std::string title;
 
 	//	Start but percentage -> coordinate
