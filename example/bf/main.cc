@@ -12,7 +12,7 @@ class Program
 {
 public:
 	Program(const std::string& path, Logger& output, Logger& debug, Tree& structure)
-		: output(output), debug(debug), structure(structure)
+		: output(output), debug(debug)
 	{
 		debug.addMessage(LogLevel::Debug, "Loading program ", path);
 
@@ -44,29 +44,8 @@ public:
 
 		debug.addMessage(LogLevel::Debug, "Parsing source ", source);
 
+		root.node = &structure.root;
 		parseBlock(source, &root, 0, source.length());
-
-		std::function <void(size_t, Block*, TreeNode&)> printAll;
-		printAll = [&printAll, &debug](size_t indent, Block* b, TreeNode& p) -> void
-		{
-			std::string ind(indent, ' ');
-			debug.addMessage(LogLevel::Normal, ind, "Block has ", b->instructions.size(), " instructions");
-
-			for(auto& ins : b->instructions)
-			{
-				if(!ins.isOperation)
-				{
-					TreeNode& t = p.add("block");
-					printAll(indent + 2, ins.value.inner, t);
-					continue;
-				}
-
-				debug.addMessage(LogLevel::Normal, ind, ins.value.op);
-				TreeNode& t = p.add(std::string("Ins: ") + ins.value.op);
-			}
-		};
-
-		printAll(0, &root, structure.root);
 	}
 
 private:
@@ -88,6 +67,7 @@ private:
 
 		size_t index = 0;
 		Block* active = nullptr;
+		TreeNode* node = nullptr;
 	};
 
 	struct Cell
@@ -110,6 +90,7 @@ private:
 				b->instructions.push_back({});
 				b->instructions.back().isOperation = false;
 				b->instructions.back().value.inner = new Block;
+				b->instructions.back().value.inner->node = &b->node->add("block");
 
 				unsigned depth = 1;
 
@@ -161,6 +142,7 @@ private:
 				b->instructions.push_back({});
 				b->instructions.back().isOperation = true;
 				b->instructions.back().value.op = src[i];
+				b->node->add(std::string("INS: ") + src[i]);
 			}
 		}
 	}
@@ -172,7 +154,6 @@ private:
 
 	Logger& output;
 	Logger& debug;
-	Tree& structure;
 };
 
 int main()
