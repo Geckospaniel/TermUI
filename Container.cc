@@ -59,7 +59,7 @@ void Container::draw()
 	{
 		if(child->needsRedraw)
 		{
-			DebugHelper::logger->addMessage(LogLevel::Debug, "Drawing ", child->title, " (child of ", title, ")");
+			//DebugHelper::logger->addMessage(LogLevel::Debug, "Drawing ", child->title, " (child of ", title, ")");
 
 			child->draw();
 			child->drawBorders();

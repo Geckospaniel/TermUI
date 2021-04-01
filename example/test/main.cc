@@ -5,7 +5,7 @@
 
 int main()
 {
-	Container root(false);
+	Container root(true);
 	root.setTitle("root");
 	Tree& tree = root.create <Tree> (Vector2(10, 10), Vector2(50, 50));
 	tree.setTitle("tree");
@@ -13,6 +13,8 @@ int main()
 	DebugHelper::logger->setTitle("debugLogger");
 	Menu& m = root.create <Menu> (Vector2(10, 50), Vector2(50, 90));
 	m.setTitle("menu");
+
+	tree.stealFocus();
 
 	TreeNode& a = tree.root.add("a");
 	TreeNode& a1 = a.add("1");

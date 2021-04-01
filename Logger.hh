@@ -49,6 +49,8 @@ public:
 
 		cursorPosition = messages.size();
 		messages.push_back( { time, ss.str(), l } );
+
+		setRedraw();
 	}
 	
 private:

@@ -12,13 +12,20 @@ public:
 	TreeNode& add(const std::string& name);
 
 	void setName(const std::string& name);
-	void setExpanded(bool state);
+
+	//	Depending on state, hides/expands a node. Returns true if success
+	bool setExpanded(bool state);
 
 private:
 	friend class Tree;
 	std::string name;
 
+	//	Should the children be hidden after expansion?
+	bool hideChildren = false;
+
+	//	Are children visible?
 	bool isExpanded = true;
+
 	std::vector <TreeNode*> children;
 
 	TreeNode* parent;
@@ -45,7 +52,7 @@ private:
 	TreeNode* selectedNode = &root;
 
 	size_t selected = 0;
-	size_t expandedNodes = 0;
+	size_t visibleNodes = 0;
 };
 
 #endif

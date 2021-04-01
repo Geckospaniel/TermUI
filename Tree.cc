@@ -7,9 +7,14 @@ TreeNode& TreeNode::add(const std::string& name)
 {
 	TreeNode* child = new TreeNode;
 
+	//child->isExpanded = isExpanded;
+	child->isExpanded = true;
 	child->parent = this;
 	child->tree = tree;
-	tree->expandedNodes++;
+
+	//	If the child node won't be visibile, don't count it
+	//if(isExpanded)
+	tree->visibleNodes++;
 
 	child->setName(name);
 	children.push_back(child);
@@ -23,30 +28,46 @@ void TreeNode::setName(const std::string& name)
 	tree->setRedraw();
 }
 
-void TreeNode::setExpanded(bool state)
+bool TreeNode::setExpanded(bool state)
 {
 	//	No point in expanding/hiding without child nodes
 	if(children.empty())
-		return;
+	{
+		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " doesn't have children");
+		return false;
+	}
+
+	//	If an unexpanded node should be hidden, save the state
+	if(!state && !isExpanded)
+	{
+		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " doesn't have children");
+		hideChildren = true;
+	}
+
+	//	If the children should stay hidden instead of expanding, don't expand
+	else if(state && hideChildren)
+	{
+		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " hiding children");
+		hideChildren = false;
+		return false;
+	}
+
+	isExpanded = state;
 
 	//	Hide/show children	
 	for(auto& child : children)
 	{
-		//	Make sure that expandedNodes doesn't get too high
-		if(state)
-			tree->expandedNodes++;
-
-		//	Make sure that expandedNodes doesn't get too low
-		else if(!state)
-			tree->expandedNodes--;
-
-		//	Recursively call the children
+		DebugHelper::logger->addMessage(LogLevel::Warning, "setExpanded(", state, ") on ", child->name);
 		child->setExpanded(state);
+
+		if(!hideChildren)
+			tree->visibleNodes += (isExpanded ? 1 : -1);
+
+		DebugHelper::logger->addMessage(LogLevel::Normal, tree->visibleNodes, " after ", isExpanded ? "expanding " : "hiding ", child->name);
 	}
 
-	//	If the node is hidden and parent is set hidden, don't hide it
-	isExpanded = state;
 	tree->setRedraw();
+	return true;
 }
 
 void Tree::onKeyPress(int key)
@@ -82,7 +103,7 @@ void Tree::onKeyPress(int key)
 	{
 		case KEY_DOWN:
 			//	Set the cursor at the beginning if it overflows
-			if(++selected > expandedNodes)
+			if(++selected > visibleNodes)
 				selected = 1;
 
 			//	Update the selected node
@@ -92,7 +113,7 @@ void Tree::onKeyPress(int key)
 		case KEY_UP:
 			//	Set the cursor at the end if it overflows
 			if(--selected <= 0)
-				selected = expandedNodes;
+				selected = visibleNodes;
 
 			//	Update the selected node
 			selectedNode = findNode(&root, pos);
@@ -100,6 +121,7 @@ void Tree::onKeyPress(int key)
 
 		case 10: case KEY_RIGHT:
 			Window::clear();
+			DebugHelper::logger->addMessage(LogLevel::Normal, visibleNodes, " nodes visible");
 			selectedNode->setExpanded(!selectedNode->isExpanded);
 		break;
 	}
