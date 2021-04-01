@@ -62,7 +62,7 @@ public:
 				}
 
 				debug.addMessage(LogLevel::Normal, ind, ins.value.op);
-				TreeNode& t = p.add(std::string("Ins: ") + (char)ins.value.op);
+				TreeNode& t = p.add(std::string("Ins: ") + ins.value.op);
 			}
 		};
 
@@ -77,7 +77,7 @@ private:
 			union
 			{
 				Block* inner;
-				unsigned char op;
+				char op;
 
 			} value;
 

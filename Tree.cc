@@ -33,21 +33,21 @@ bool TreeNode::setExpanded(bool state)
 	//	No point in expanding/hiding without child nodes
 	if(children.empty())
 	{
-		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " doesn't have children");
+		DebugHelper::log(LogLevel::Warning, "Node ", name, " doesn't have children");
 		return false;
 	}
 
 	//	If an unexpanded node should be hidden, save the state
 	if(!state && !isExpanded)
 	{
-		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " doesn't have children");
+		DebugHelper::log(LogLevel::Warning, "Node ", name, " doesn't have children");
 		hideChildren = true;
 	}
 
 	//	If the children should stay hidden instead of expanding, don't expand
 	else if(state && hideChildren)
 	{
-		DebugHelper::logger->addMessage(LogLevel::Warning, "Node ", name, " hiding children");
+		DebugHelper::log(LogLevel::Warning, "Node ", name, " hiding children");
 		hideChildren = false;
 		return false;
 	}
@@ -57,13 +57,13 @@ bool TreeNode::setExpanded(bool state)
 	//	Hide/show children	
 	for(auto& child : children)
 	{
-		DebugHelper::logger->addMessage(LogLevel::Warning, "setExpanded(", state, ") on ", child->name);
+		DebugHelper::log(LogLevel::Warning, "setExpanded(", state, ") on ", child->name);
 		child->setExpanded(state);
 
 		if(!hideChildren)
 			tree->visibleNodes += (isExpanded ? 1 : -1);
 
-		DebugHelper::logger->addMessage(LogLevel::Normal, tree->visibleNodes, " after ", isExpanded ? "expanding " : "hiding ", child->name);
+		DebugHelper::log(LogLevel::Normal, tree->visibleNodes, " after ", isExpanded ? "expanding " : "hiding ", child->name);
 	}
 
 	tree->setRedraw();
@@ -121,7 +121,7 @@ void Tree::onKeyPress(int key)
 
 		case 10: case KEY_RIGHT:
 			Window::clear();
-			DebugHelper::logger->addMessage(LogLevel::Normal, visibleNodes, " nodes visible");
+			DebugHelper::log(LogLevel::Normal, visibleNodes, " nodes visible");
 			selectedNode->setExpanded(!selectedNode->isExpanded);
 		break;
 	}

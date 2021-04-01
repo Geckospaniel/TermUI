@@ -59,8 +59,6 @@ void Container::draw()
 	{
 		if(child->needsRedraw)
 		{
-			//DebugHelper::logger->addMessage(LogLevel::Debug, "Drawing ", child->title, " (child of ", title, ")");
-
 			child->draw();
 			child->drawBorders();
 			touchwin(child->window);
@@ -138,8 +136,7 @@ void Container::setActiveChild()
 	{
 		if(child->wantsFocus)
 		{
-			if(DebugHelper::logger != nullptr)
-				DebugHelper::logger->addMessage(LogLevel::Debug, "Child ", child->title, " wants focus");
+			DebugHelper::log(LogLevel::Debug, "Child ", child->title, " wants focus");
 
 			//	If a window wants the focus, set it as active
 			activeChild = child;
